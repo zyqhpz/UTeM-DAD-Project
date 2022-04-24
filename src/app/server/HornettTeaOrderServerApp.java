@@ -9,6 +9,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
 
+import app.server.thread.BaristaReceiver;
 import controller.OrderManager;
 import controller.database.Database;
 import model.Order;
@@ -22,6 +23,9 @@ import model.Order;
  */
 
 public class HornettTeaOrderServerApp {
+
+	// private Socket baristaSocket = null;
+
 	public static void main(String args[]) throws ClassNotFoundException, Exception {
 
 		System.out.println("\n\nStarting HornettTeaOrderServerApp..\n");
@@ -31,6 +35,8 @@ public class HornettTeaOrderServerApp {
 
 		Order order;
 		OrderManager orderManager;
+
+		Socket baristaSocket = null;
 
 		try {
 
@@ -83,7 +89,13 @@ public class HornettTeaOrderServerApp {
 
 				System.out.println("\n\tWaiting for next request\n");
 
-				try (Socket baristaSocket = new Socket(serverAddress, 8088);) {
+				// start the barista as thread
+				// Runnable barista = new BaristaReceiver();
+
+				// try (Socket baristaSocket = new Socket(serverAddress, 8088);) {
+				try {
+
+					baristaSocket = new Socket(serverAddress, 8088);
 
 					// Send Order object to Barista
 					// Socket baristaSocket = baristaServerSocket.accept();
@@ -95,36 +107,78 @@ public class HornettTeaOrderServerApp {
 
 					System.out.println("\n\tOrder object sent to Barista.\n");
 
-					baristaSocket.close();
-					// clientSocket.close();
-				} catch (Exception e) {
-					System.out.println("\n\tError: " + e.getMessage() + "\n");
-				}
-
-				try (Socket baristaSocket = new Socket(serverAddress, 8089);) {
-
-					// Send Order object to Barista
-					// Socket baristaSocket = baristaServerSocket.accept();
-
-					// baristaSocket = baristaSocket.accept();
-
-					InputStream baristaIS = baristaSocket.getInputStream();
-					ObjectInputStream baristaOIS = new ObjectInputStream(baristaIS);
+					// InputStream baristaIS = baristaSocket.getInputStream();
+					// ObjectInputStream baristaOIS = new ObjectInputStream(baristaIS);
 
 					// OutputStream baristaOS = baristaSocket.getOutputStream();
 					// ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
 
 					// baristaOOS.writeObject(order);
-					order = (Order) baristaOIS.readObject();
+					// order = (Order) baristaOIS.readObject();
 
-					System.out.println("\n\tOrder object received from Barista.\n");
+					// int orderId = baristaOIS.readInt();
 
-					baristaSocket.close();
+					// read int from barista
+
+					// int orderId = 1;
+
+					// try {
+					// // Thread.sleep(5000);
+					// // orderId = (int) baristaOIS.readObject();
+					// // orderId = baristaOIS.readInt();
+
+					// order = (Order) baristaOIS.readObject();
+
+					// } catch (Exception e) {
+					// // TODO Auto-generated catch block
+					// e.printStackTrace();
+					// }
+					// // int orderId = (int) baristaOIS.readObject();
+
+					// orderId = order.getOrderId();
+
+					// System.out.println("\n\tOrder " + orderId + " get from Barista.\n");
+
+					// baristaSocket.close();
 					// clientSocket.close();
-
 				} catch (Exception e) {
 					System.out.println("\n\tError: " + e.getMessage() + "\n");
 				}
+
+				Runnable barista = new BaristaReceiver(baristaSocket);
+				Thread baristaThread = new Thread(barista);
+				baristaThread.start();
+
+				// try (Socket baristaSocket = new Socket(serverAddress, 8088);) {
+
+				// // Send Order object to Barista
+				// // Socket baristaSocket = baristaServerSocket.accept();
+
+				// // baristaSocket = baristaSocket.accept();
+
+				// // Listen to InputStream from Barista
+
+				// InputStream baristaIS = baristaSocket.getInputStream();
+				// ObjectInputStream baristaOIS = new ObjectInputStream(baristaIS);
+
+				// // OutputStream baristaOS = baristaSocket.getOutputStream();
+				// // ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
+
+				// // baristaOOS.writeObject(order);
+				// // order = (Order) baristaOIS.readObject();
+
+				// int orderId = baristaOIS.readInt();
+
+				// System.out.println("\n\tOrder " + orderId + " get from Barista.\n");
+
+				// // System.out.println("\n\tOrder object received from Barista.\n");
+
+				// // baristaSocket.close();
+				// // clientSocket.close();
+
+				// } catch (Exception e) {
+				// System.out.println("\n\tError: " + e.getMessage() + "\n");
+				// }
 
 			}
 

@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import app.client.thread.BaristaGetter;
+
 import java.io.IOException;
 
 import controller.database.Database;
@@ -53,71 +55,184 @@ public class HornettTeaOrderBarista {
             serverSocket = new ServerSocket(portNo);
             // InetAddress serverAddress = InetAddress.getLocalHost();
 
-            while (true) {
+            Runnable baristaGetter = null;
+            Thread baristaThread = null;
 
-                // System.out.print("\tSend? >> ");
+            baristaGetter = new BaristaGetter(serverSocket);
+            baristaThread = new Thread(baristaGetter);
 
-                // // read Order object from server
-                Socket socket = serverSocket.accept();
+            baristaThread.start();
 
-                InputStream inStream = socket.getInputStream();
-                ObjectInputStream ois = new ObjectInputStream(inStream);
+            // ObjectInputStream ois = null;
 
-                // trigger a function when the server sends an Order object
+            // while (!serverSocket.isClosed()) {
 
-                // always try to listen to any requests from the server
-                // if (ois.readObject() instanceof Order) {
+            // // System.out.print("\tSend? >> ");
 
-                // try (ObjectInputStream ois = new ObjectInputStream(inStream);) {
-                order = (Order) ois.readObject();
+            // // // read Order object from server
+            // Socket socket = serverSocket.accept();
 
-                clearScreen();
+            // InputStream inStream = socket.getInputStream();
+            // // ObjectInputStream ois = new ObjectInputStream(inStream);
+            // ObjectInputStream ois = new ObjectInputStream(inStream);
 
-                System.out.println("\n\t-- HornettTeaOrderBaristaApp --\n");
+            // // trigger a function when the server sends an Order object
 
-                System.out.println("\n\nOrder received from server: ");
+            // // always try to listen to any requests from the server
+            // // if (ois.readObject() instanceof Order) {
 
-                System.out.println("\tOrder ID: " + order.getOrderId());
+            // // try (ObjectInputStream ois = new ObjectInputStream(inStream);) {
 
-                // print current date
-                Date date = new Date();
-                System.out.println("\tDate: " + date);
+            // // while () {
 
-                // System.out.print("Enter 1 to accept order, 2 to reject order, 3 to cancel
-                // order\n>> ");
+            // // }
 
-                // send = sc.nextInt();
+            // order = (Order) ois.readObject();
 
-                // if (send == 1) {
-                // clearScreen();
-                // }
+            // clearScreen();
 
-                // if (order != null) {
-                // clearScreen();
-                // }
+            // System.out.println("\n\t-- HornettTeaOrderBaristaApp --\n");
 
-                // print Order object
+            // // System.out.println("\n\nOrder received from server: ");
 
-                if (send == 1) {
-                    Socket socketBarista = new Socket(serverAddress, 8089);
+            // // System.out.println("\tOrder ID: " + order.getOrderId());
 
-                    OutputStream outStream = socketBarista.getOutputStream();
-                    ObjectOutputStream oos = new ObjectOutputStream(outStream);
-                    oos.writeObject(order);
+            // // do {
+            // Date date = new Date();
+            // System.out.println("\tDate: " + date);
 
-                    System.out.println("\n\tSending Update Order to server\n");
-                    socketBarista.close();
-                }
+            // send = 1;
 
-                // } catch (Exception e) {
-                // System.out.println("\n\tError: " + e.getMessage());
-                // }
+            // System.out.print("Enter 1 to accept order, 2 to reject order, 3 to cancel
+            // order\n>> ");
 
-                // if (ois != null) {
+            // send = sc.nextInt();
 
-                // }
+            // //
 
-            }
+            // // add a sleep for 5 seconds to simulate the time taken
+            // // to process the order
+            // // Thread.sleep(3000);
+
+            // if (send == 1) {
+            // // Socket socket = new Socket(serverAddress, serverPortNo);
+
+            // OutputStream outStream = socket.getOutputStream();
+            // ObjectOutputStream oos = new ObjectOutputStream(outStream);
+            // // oos.writeInt(order.getOrderId());
+
+            // // for (int i = 0; i < order.getOrderItems().size(); i++) {
+            // // oos.writeObject(order.getOrderItems().get(i));
+            // // }
+
+            // System.out.print("Send as what OrderID? \n>> ");
+
+            // int orderId = sc.nextInt();
+            // order.setOrderId(orderId);
+
+            // // for (int i = 0; i < 3; i++) {
+            // try {
+            // // oos.writeInt(order.getOrderId());
+
+            // oos.writeObject(order);
+            // System.out.println("\n\tSending Order " + order.getOrderId() + " to
+            // server\n");
+
+            // } catch (Exception e) {
+            // // TODO: handle exception
+            // System.out.println("\n\tError from writeObject: " + e.getMessage());
+            // }
+
+            // continue;
+
+            // // System.out.println("\n\tSending Order " + order.getOrderId() + " to
+            // // server\n");
+            // // }
+
+            // // socket.close();
+
+            // }
+            // } while (true);
+
+            // print current date
+
+            // System.out.print("Enter 1 to accept order, 2 to reject order, 3 to cancel
+            // order\n>> ");
+
+            // send = sc.nextInt();
+
+            // if (send == 1) {
+            // clearScreen();
+            // }
+
+            // if (order != null) {
+            // clearScreen();
+            // }
+
+            // print Order object
+            // if (send == 1) {
+            // et socketBarista = new Socket(serverAddress, 8089);
+
+            // utStream outStream = socketBarista.getOutputStream();
+            // ctOutputStream oos = new ObjectOutputStream(outStream);
+            // writeObject(order);
+
+            // em.out.println("\n\tSending Update Order to server\n");
+            // etBarista.close();
+            // }
+
+            // send order.getOrderId() as int to server to update the order status
+            // to "Accepted"
+
+            // send = 1;
+
+            // System.out.print("Enter 1 to accept order, 2 to reject order, 3 to cancel
+            // order\n>> ");
+
+            // send = sc.nextInt();
+
+            // // add a sleep for 5 seconds to simulate the time taken
+            // // to process the order
+            // // Thread.sleep(3000);
+
+            // if (send == 1) {
+            // // Socket socket = new Socket(serverAddress, serverPortNo);
+
+            // OutputStream outStream = socket.getOutputStream();
+            // ObjectOutputStream oos = new ObjectOutputStream(outStream);
+            // // oos.writeInt(order.getOrderId());
+
+            // // for (int i = 0; i < order.getOrderItems().size(); i++) {
+            // // oos.writeObject(order.getOrderItems().get(i));
+            // // }
+
+            // // for (int i = 0; i < 3; i++) {
+            // try {
+            // // oos.writeInt(order.getOrderId());
+
+            // oos.writeObject(order);
+            // } catch (Exception e) {
+            // // TODO: handle exception
+            // System.out.println("\n\tError from writeObject: " + e.getMessage());
+            // }
+
+            // System.out.println("\n\tSending Order " + order.getOrderId() + " to
+            // server\n");
+            // // }
+
+            // // socket.close();
+
+            // }
+
+            // } catch (Exception e) {
+            // System.out.println("\n\tError: " + e.getMessage());
+            // }
+
+            // if (ois != null) {
+
+            // }
+
+            // }
 
         } catch (
 
