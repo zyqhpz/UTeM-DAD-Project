@@ -14,10 +14,11 @@ public class DisplayList implements Runnable {
     private ServerSocket serverSocket = null;
     private Socket socket = null;
 
-    Order order;
+    private Order order;
 
-    public DisplayList(ServerSocket serverSocket) {
+    public DisplayList(ServerSocket serverSocket, Order order) {
         this.serverSocket = serverSocket;
+        this.order = order;
     }
 
     @Override
@@ -26,71 +27,107 @@ public class DisplayList implements Runnable {
         Date date = new Date();
         System.out.println("\n\t" + date.toString() + "\n");
 
-        int send = 1;
+        display();
 
-        do {
-            // display data from Order object
-            // order.displayData();
+        // int send = 1;
 
-            // display menu
-            try {
-                socket = serverSocket.accept();
-                // OutputStream outStream = socket.getOutputStream();
-                // ObjectOutputStream oos = new ObjectOutputStream(outStream);
+        // do {
+        // // display data from Order object
+        // // order.displayData();
 
-                // oos.writeObject(order);
-                // oos.flush();
-                // oos.close();
-                // outStream.close();
-                // socket.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            System.out.println(
-                    "\n\t1. Get Order");
-            System.out.println("\t2. Exit");
-            System.out.print("\n\tEnter your choice: ");
+        // // display menu
+        // try {
+        // socket = serverSocket.accept();
+        // // OutputStream outStream = socket.getOutputStream();
+        // // ObjectOutputStream oos = new ObjectOutputStream(outStream);
 
-            // read user's choice
-            // int choice = Integer.parseInt(System.console().readLine());
+        // // oos.writeObject(order);
+        // // oos.flush();
+        // // oos.close();
+        // // outStream.close();
+        // // socket.close();
+        // } catch (Exception e) {
+        // e.printStackTrace();
+        // }
+        // System.out.println(
+        // "\n\t1. Get Order");
+        // System.out.println("\t2. Exit");
+        // System.out.print("\n\tEnter your choice: ");
 
-            Scanner sc = new Scanner(System.in);
+        // // read user's choice
+        // // int choice = Integer.parseInt(System.console().readLine());
 
-            int choice = sc.nextInt();
+        // Scanner sc = new Scanner(System.in);
 
-            // try {
-            // socket = serverSocket.accept();
-            // } catch (Exception e) {
-            // // TODO: handle exception
-            // }
+        // int choice = sc.nextInt();
 
-            switch (choice) {
-                case 1:
-                    try {
-                        // socket = serverSocket.accept();
-                        OutputStream outStream = socket.getOutputStream();
-                        ObjectOutputStream oos = new ObjectOutputStream(outStream);
-                        oos.writeObject(order);
+        // // try {
+        // // socket = serverSocket.accept();
+        // // } catch (Exception e) {
+        // // // TODO: handle exception
+        // // }
 
-                        oos.flush();
-                        oos.close();
-                        outStream.close();
-                        // oos.flush();
-                        System.out.println("Order updated");
-                    } catch (Exception e) {
-                        // TODO: handle exception
-                        e.printStackTrace();
-                    }
-                    // send Order object to barista
+        // switch (choice) {
+        // case 1:
+        // try {
+        // // socket = serverSocket.accept();
+        // OutputStream outStream = socket.getOutputStream();
+        // ObjectOutputStream oos = new ObjectOutputStream(outStream);
+        // oos.writeObject(order);
 
-                    break;
-                case 2:
-                    // exit
-                    break;
-                default:
-                    System.out.println("\n\tInvalid choice. Please try again.\n");
-                    break;
-            }
-        } while (true);
+        // oos.flush();
+        // oos.close();
+        // outStream.close();
+        // // oos.flush();
+        // System.out.println("Order updated");
+        // } catch (Exception e) {
+        // // TODO: handle exception
+        // e.printStackTrace();
+        // }
+        // // send Order object to barista
+
+        // break;
+        // case 2:
+        // // exit
+        // break;
+        // default:
+        // System.out.println("\n\tInvalid choice. Please try again.\n");
+        // break;
+        // }
+        // } while (true);
+    }
+
+    public void display() {
+        Scanner sc = new Scanner(System.in);
+        System.out.print(">> ");
+        int choice = sc.nextInt();
+        switch (choice) {
+            case 1:
+                try {
+                    // socket = serverSocket.accept();
+                    order.setOrderId(2);
+                    OutputStream outStream = socket.getOutputStream();
+                    ObjectOutputStream oos = new ObjectOutputStream(outStream);
+                    oos.writeObject(order);
+
+                    oos.flush();
+                    oos.close();
+                    outStream.close();
+                    // oos.flush();
+                    System.out.println("Order updated");
+                } catch (Exception e) {
+                    // TODO: handle exception
+                    e.printStackTrace();
+                }
+                // send Order object to barista
+
+                break;
+            case 2:
+                // exit
+                break;
+            default:
+                System.out.println("\n\tInvalid choice. Please try again.\n");
+                break;
+        }
     }
 }
