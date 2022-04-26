@@ -1,9 +1,12 @@
 package controller;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
 import model.*;
+import controller.database.Database;
 
 public class OrderManager {
 
@@ -13,18 +16,22 @@ public class OrderManager {
         this.order = order;
     }
 
-    // private void processItemProducts() {
-    // // process item products to insert data in database
+    // insert data into database
+    public void orderProcessor() throws ClassNotFoundException, SQLException {
 
-    // List<OrderItem> orderItems = order.getOrderItems();
+        // connect to database
+        Database database = new Database();
+        Connection conn = database.doConnection();
 
-    // for (OrderItem orderItem : orderItems) {
-    // int itemProductId = orderItem.getItemProduct().getItemProductId();
-    // int quantity = orderItem.getQuantity();
-    // double price = orderItem.getItemProduct().getPrice();
-    // double subTotalAmount = orderItem.getSubTotalAmount();
-    // }
-    // }
+        List<OrderItem> orderItems = order.getOrderItems();
+
+        for (OrderItem orderItem : orderItems) {
+            int itemProductId = orderItem.getItemProduct().getItemProductId();
+            int quantity = orderItem.getQuantity();
+            double price = orderItem.getItemProduct().getPrice();
+            double subTotalAmount = orderItem.getSubTotalAmount();
+        }
+    }
 
     public void displayData() {
         System.out.println("Order Id: " + order.getOrderId());
