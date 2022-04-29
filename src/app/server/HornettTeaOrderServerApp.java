@@ -24,8 +24,6 @@ import model.Order;
 
 public class HornettTeaOrderServerApp {
 
-	// private Socket baristaSocket = null;
-
 	public static void main(String args[]) throws ClassNotFoundException, Exception {
 
 		System.out.println("\n\nStarting HornettTeaOrderServerApp..\n");
@@ -41,16 +39,13 @@ public class HornettTeaOrderServerApp {
 		try {
 
 			// create a connection to the database
-			// Connection conn = Database.doConnection();
-			// System.out.println("Connected to the database..\n");
+			Connection conn = Database.doConnection();
+			System.out.println("Connected to the database..\n");
 
 			// bind to a port
 			int portNo = 8087;
 			serverSocket = new ServerSocket(portNo);
 			InetAddress serverAddress = InetAddress.getLocalHost();
-			// Socket baristaSocket = new Socket(serverAddress, 8088);
-
-			// baristaServerSocket = new ServerSocket(8088);
 
 			System.out.println("\tWaiting for request from Cashier\n");
 
