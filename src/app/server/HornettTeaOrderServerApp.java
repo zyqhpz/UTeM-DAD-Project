@@ -91,7 +91,7 @@ public class HornettTeaOrderServerApp {
 
 				// start the barista as thread
 				// Runnable barista = new BaristaReceiver();
-
+				
 				// try (Socket baristaSocket = new Socket(serverAddress, 8088);) {
 				try {
 
