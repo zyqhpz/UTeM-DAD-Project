@@ -1,23 +1,14 @@
 package app.client;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import controller.database.Database;
 import model.*;
 
 /**
@@ -29,7 +20,7 @@ import model.*;
  */
 
 public class HornettTeaOrderCashierApp {
-    public static void main(String args[]) throws ClassNotFoundException, Exception {
+    public static void main(String args[]) {
 
         System.out.println("\n\nStarting HornettTeaOrderCashierApp..\n");
 
@@ -60,6 +51,8 @@ public class HornettTeaOrderCashierApp {
 
                     System.out.println("\n\tSending Order to server\n");
                     socket.close();
+
+                    sc.close();
                 }
 
                 else

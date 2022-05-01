@@ -39,8 +39,8 @@ public class HornettTeaOrderServerApp {
 		try {
 
 			// create a connection to the database
-			Connection conn = Database.doConnection();
-			System.out.println("Connected to the database..\n");
+			// Connection conn = Database.doConnection();
+			// System.out.println("Connected to the database..\n");
 
 			// bind to a port
 			int portNo = 8087;
