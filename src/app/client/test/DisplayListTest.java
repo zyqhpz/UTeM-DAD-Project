@@ -2,6 +2,7 @@ package app.client.test;
 
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -20,9 +21,10 @@ public class DisplayListTest implements Runnable {
 
     private Order order;
 
-    public DisplayListTest(ServerSocket serverSocket, Order order) {
+    public DisplayListTest(ServerSocket serverSocket, Order order, Socket socket) {
         this.serverSocket = serverSocket;
         this.order = order;
+        this.socket = socket;
     }
 
     @Override
@@ -31,7 +33,10 @@ public class DisplayListTest implements Runnable {
         Date date = new Date();
         System.out.println("\n\t" + date.toString() + "\n");
 
-        display();
+        do {
+            display();
+        } while(true);
+        
 
         // int send = 1;
 
@@ -102,24 +107,34 @@ public class DisplayListTest implements Runnable {
     }
 
     public void display() {
+        System.out.println("\n\t1. Get Order");
+        System.out.println("\t2. Exit");
+        System.out.print("\n\tEnter your choice: ");
         Scanner sc = new Scanner(System.in);
         System.out.print(">> ");
         int choice = sc.nextInt();
         switch (choice) {
             case 1:
                 try {
-                    socket = serverSocket.accept();
+                    InetAddress ip = InetAddress.getLocalHost();
+                    // serverSocket = new ServerSocket(ip, 8089);
+                    socket = new Socket(ip, 8085);
+
+                    // bind to port 8089
+                    // serverSocket = new ServerSocket(8085);
+                    
+                    // socket = serverSocket.accept();
                     order = loadOrder();
                     order.setOrderId(2);
                     OutputStream outStream = socket.getOutputStream();
                     ObjectOutputStream oos = new ObjectOutputStream(outStream);
                     oos.writeObject(order);
-
-                    oos.flush();
-                    oos.close();
-                    outStream.close();
-                    // oos.flush();
                     System.out.println("Order updated");
+
+                    // oos.flush();
+                    // oos.close();
+                    // outStream.close();
+                    // oos.flush();
                 } catch (Exception e) {
                     // TODO: handle exception
                     e.printStackTrace();

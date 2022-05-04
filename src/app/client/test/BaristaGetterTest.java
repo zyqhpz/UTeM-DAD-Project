@@ -39,21 +39,24 @@ public class BaristaGetterTest implements Runnable {
     // public BaristaGetter(Socket baristaSocket) {
     // this.baristaSocket = baristaSocket;
     // }
-    public BaristaGetterTest(ServerSocket serverSocket) {
+    public BaristaGetterTest(ServerSocket serverSocket, Socket baristaSocket) {
         this.serverSocket = serverSocket;
+        this.baristaSocket = baristaSocket;
     }
 
     @Override
     public void run() {
         // Socket baristaSocket = null;
-        while (!serverSocket.isClosed()) {
+        // while (!serverSocket.isClosed()) {
+        while (!baristaSocket.isClosed()) {
             // Runnable displayList = new DisplayList(serverSocket);
             // Thread thread = new Thread(displayList);
 
-            Runnable displayList = new DisplayListTest(serverSocket, order);
+            Runnable displayList = new DisplayListTest(serverSocket, order, baristaSocket);
             Thread thread = new Thread(displayList);
             try {
-                Socket socket = serverSocket.accept();
+                // Socket socket = serverSocket.accept();
+                Socket socket = baristaSocket;
 
                 InputStream inStream = socket.getInputStream();
                 // ObjectInputStream ois = new ObjectInputStream(inStream);
@@ -61,9 +64,33 @@ public class BaristaGetterTest implements Runnable {
 
                 // read Order object from barista
                 // order = (Order) ois.readObject();
-                orders = (List<Order>) ois.readObject();
-                System.out.println("get orders from barista");
-                clearScreen();
+                // readObject as an arraylist
+                // List<Order> orders = (ArrayList<Order>)(ois.readObject());
+                
+                // orders = (List<Order>) ois.readObject();
+
+                Object obj = ois.readObject();
+                // Check it's an ArrayList
+                if (obj instanceof ArrayList<?>) {
+                    // Get the List.
+                    ArrayList<?> al = (ArrayList<?>) obj;
+                    if (al.size() > 0) {
+                        // Iterate.
+                        for (int i = 0; i < al.size(); i++) {
+                            // Still not enough for a type.
+                            Object o = al.get(i);
+                            if (o instanceof Order) {
+                                // Here we go!
+                                Order v = (Order) o;
+                                // use v.
+                            }
+                        }
+                    }
+                }
+
+                // new ArrayList<>(Arrays.asList(sos1.getValue()));
+                System.out.println("Get orders object from server");
+                // clearScreen();
 
                 // Runnable displayList = new DisplayList(serverSocket, order);
                 // Thread thread = new Thread(displayList);
@@ -71,7 +98,7 @@ public class BaristaGetterTest implements Runnable {
 
                 // order = loadOrder();
 
-                displayList();
+                // displayList();
                 thread.start();
                 
 

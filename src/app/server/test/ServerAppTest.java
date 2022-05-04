@@ -34,7 +34,7 @@ public class ServerAppTest {
 
         System.out.println("\n\nStarting HornettTeaOrderServerApp..\n");
 
-        ServerSocket serverSocket = null;
+        ServerSocket cashierServerSocket = null;
         ServerSocket baristaServerSocket = null;
 
         Order order;
@@ -50,22 +50,38 @@ public class ServerAppTest {
 
             // bind to a port
             int portNo = 8087;
-            serverSocket = new ServerSocket(portNo);
+            cashierServerSocket = new ServerSocket(portNo);
             InetAddress serverAddress = InetAddress.getLocalHost();
             // Socket baristaSocket = new Socket(serverAddress, 8088);
 
             // baristaServerSocket = new ServerSocket(8088);
 
+            baristaServerSocket = new ServerSocket(8088);
+
+            ServerSocket baristaGetterSocket = new ServerSocket(8085);
+
+            Socket baristaGetter = baristaGetterSocket.accept();
+
             System.out.println("\tWaiting for request from Cashier\n");
 
             Runnable barista = null;
             Thread baristaThread = null;
+            Thread baristaSenderThread = null;
+
+            baristaSocket = baristaServerSocket.accept();
+
+            Runnable baristaSender = new BaristaFromServerTest(
+                    baristaGetter, baristaServerSocket,
+                    baristaGetterSocket);
+            baristaSenderThread = new Thread(baristaSender);
+
+            baristaSenderThread.start();
 
             // 2. Listen to request
-            while (!serverSocket.isClosed()) {
+            while (!cashierServerSocket.isClosed()) {
 
                 // 3. Accept request from client
-                Socket clientSocket = serverSocket.accept();
+                Socket clientSocket = cashierServerSocket.accept();
 
                 InputStream is = clientSocket.getInputStream();
                 ObjectInputStream ois = new ObjectInputStream(is);
@@ -95,10 +111,18 @@ public class ServerAppTest {
                 // try (Socket baristaSocket = new Socket(serverAddress, 8088);) {
                 try {
 
-                    baristaSocket = new Socket(serverAddress, 8088);
+                    // baristaSocket = new Socket(serverAddress, 8088);
 
-                    barista = new BaristaReceiver(baristaSocket);
-                    baristaThread = new Thread(barista);
+                    // barista = new BaristaReceiver(baristaSocket);
+                    // baristaThread = new Thread(barista);
+
+                    // baristaSocket = baristaServerSocket.accept();
+
+                    // Runnable baristaSender = new BaristaFromServerTest(baristaSocket, baristaServerSocket, 
+                    //         baristaGetterSocket);
+                    // baristaSenderThread = new Thread(baristaSender);
+
+                    // baristaSenderThread.start();
 
                     OutputStream baristaOS = baristaSocket.getOutputStream();
                     ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
@@ -116,15 +140,17 @@ public class ServerAppTest {
 
                 // Runnable barista = new BaristaReceiver(baristaSocket);
                 // Thread baristaThread = new Thread(barista);
-                baristaThread.start();
+                // baristaThread.start();
+
+                // baristaSenderThread.start();
 
             }
 
         } catch (Exception e) {
 
-            if (serverSocket != null) {
-                serverSocket.close();
-            }
+            // if (serverSocket != null) {
+            //     serverSocket.close();
+            // }
 
             e.printStackTrace();
         }

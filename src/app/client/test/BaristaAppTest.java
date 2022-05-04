@@ -37,7 +37,7 @@ public class BaristaAppTest {
 
         System.out.println("\n\nStarting HornettTeaOrderBaristaApp..\n");
 
-        Order order;
+        Order order = null;
 
         ServerSocket serverSocket = null;
 
@@ -52,16 +52,23 @@ public class BaristaAppTest {
             int send = 0;
 
             int portNo = 8088;
-            serverSocket = new ServerSocket(portNo);
+            // serverSocket = new ServerSocket(portNo);
+            Socket baristaSocket = new Socket(serverAddress, portNo);
+            // Socket baristaSocket = serverSocket.accept();
             // InetAddress serverAddress = InetAddress.getLocalHost();
 
             Runnable baristaGetter = null;
             Thread baristaThread = null;
 
-            baristaGetter = new BaristaGetterTest(serverSocket);
+            baristaGetter = new BaristaGetterTest(serverSocket, baristaSocket);
             baristaThread = new Thread(baristaGetter);
 
             baristaThread.start();
+
+            Runnable displayList = new DisplayListTest(serverSocket, order, baristaSocket);
+            Thread thread = new Thread(displayList);
+
+            thread.start();
 
             // ObjectInputStream ois = null;
 
