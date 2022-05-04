@@ -16,72 +16,29 @@ import controller.OrderManager;
 import controller.database.Database;
 import model.Order;
 
-/**
- * This class represent the server app for HornettTeaOrderServerApp
- * 
- * Function: to start the server-side program for the application
- * 
- * @author haziqhapiz
- */
+public class ClientToServer implements Runnable {
 
-public class ServerAppTest {
+    private ServerSocket cashierServerSocket = null;
+    private ServerSocket baristaServerSocket = null;
+    private Socket cashierSocket = null;
+    private Socket baristaSocket = null;
+    private Order order;
+    private OrderManager orderManager;
+        private List<Order> orders = new ArrayList<Order>();
 
-    // private Socket baristaSocket = null;
 
-    private static List<Order> orders = new ArrayList<Order>();
+    public ClientToServer(ServerSocket cashierServerSocket, ServerSocket baristaServerSocket, Socket baristaSocket ) {
+        this.cashierServerSocket = cashierServerSocket;
+        this.baristaServerSocket = baristaServerSocket;
+        this.baristaSocket = baristaSocket;
+    }
+    
+    @Override
+    public void run() {
+        while (!cashierServerSocket.isClosed()) {
 
-    public static void main(String args[]) throws ClassNotFoundException, Exception {
-
-        System.out.println("\n\nStarting HornettTeaOrderServerApp..\n");
-
-        ServerSocket cashierServerSocket = null;
-        ServerSocket baristaServerSocket = null;
-
-        Order order;
-        OrderManager orderManager;
-
-        Socket baristaSocket = null;
-
-        try {
-
-            // create a connection to the database
-            // Connection conn = Database.doConnection();
-            // System.out.println("Connected to the database..\n");
-
-            // bind to a port
-            int portNo = 8087;
-            cashierServerSocket = new ServerSocket(portNo);
-            InetAddress serverAddress = InetAddress.getLocalHost();
-            // Socket baristaSocket = new Socket(serverAddress, 8088);
-
-            // baristaServerSocket = new ServerSocket(8088);
-
-            baristaServerSocket = new ServerSocket(8088);
-
-            ServerSocket baristaGetterSocket = new ServerSocket(8085);
-
-            // Socket baristaGetter = baristaGetterSocket.accept();
-            Socket baristaGetter = null;
-
-            System.out.println("\tWaiting for request from Cashier\n");
-
-            Runnable barista = null;
-            Thread baristaThread = null;
-            Thread baristaSenderThread = null;
-
-            baristaSocket = baristaServerSocket.accept();
-
-            Runnable baristaSender = new BaristaFromServerTest(
-                    baristaGetter, baristaServerSocket,
-                    baristaGetterSocket);
-            baristaSenderThread = new Thread(baristaSender);
-
-            baristaSenderThread.start();
-
-            // 2. Listen to request
-            while (!cashierServerSocket.isClosed()) {
-
-                // 3. Accept request from client
+            try {
+ // 3. Accept request from client
                 Socket clientSocket = cashierServerSocket.accept();
 
                 InputStream is = clientSocket.getInputStream();
@@ -125,6 +82,10 @@ public class ServerAppTest {
 
                     // baristaSenderThread.start();
 
+                    // baristaSocket = new Socket(InetAddress.getLocalHost(), 8088);
+
+                    // baristaSocket = baristaServerSocket.accept();
+
                     OutputStream baristaOS = baristaSocket.getOutputStream();
                     ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
 
@@ -138,22 +99,10 @@ public class ServerAppTest {
                 } catch (Exception e) {
                     System.out.println("\n\tError: " + e.getMessage() + "\n");
                 }
-
-                // Runnable barista = new BaristaReceiver(baristaSocket);
-                // Thread baristaThread = new Thread(barista);
-                // baristaThread.start();
-
-                // baristaSenderThread.start();
-
+            } catch (Exception e) {
+                System.out.println("\n\tError: " + e.getMessage() + "\n");
             }
-
-        } catch (Exception e) {
-
-            // if (serverSocket != null) {
-            //     serverSocket.close();
-            // }
-
-            e.printStackTrace();
         }
     }
 }
+    

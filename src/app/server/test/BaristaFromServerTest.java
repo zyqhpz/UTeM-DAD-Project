@@ -47,6 +47,7 @@ public class BaristaFromServerTest implements Runnable {
 
     @Override
     public void run() {
+        // while(baristaSocket.isConnected()) {
         try {
             // bind to a port
             int portNo = 8085;
@@ -60,8 +61,16 @@ public class BaristaFromServerTest implements Runnable {
             // Send Order object to Barista
             // Socket baristaSocket = baristaGetterSocket.accept();
 
+            // Socket baristaSocket = baristaGetterSocket.accept();
+
+            // InputStream baristaIS = baristaSocket.getInputStream();
+            // ObjectInputStream baristaOIS = new ObjectInputStream(baristaIS);
+
+        while(baristaSocket.isConnected()) {
+
             InputStream baristaIS = baristaSocket.getInputStream();
             ObjectInputStream baristaOIS = new ObjectInputStream(baristaIS);
+
 
             // OutputStream baristaOS = baristaSocket.getOutputStream();
             // ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
@@ -76,8 +85,13 @@ public class BaristaFromServerTest implements Runnable {
             System.out.println("\n\tOrder " + orderId + " get from Barista.\n");
 
             // baristaSocket.close();
+            // baristaGetterSocket.close();
+
+            // baristaSocket.close();
+                    }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }   
+    
 }

@@ -21,10 +21,13 @@ public class DisplayListTest implements Runnable {
 
     private Order order;
 
-    public DisplayListTest(ServerSocket serverSocket, Order order, Socket socket) {
+    private List<Order> orders = new ArrayList<Order>();
+
+    public DisplayListTest(ServerSocket serverSocket, Order order, Socket socket, List<Order> orders) {
         this.serverSocket = serverSocket;
         this.order = order;
         this.socket = socket;
+        this.orders = orders;
     }
 
     @Override
@@ -35,6 +38,7 @@ public class DisplayListTest implements Runnable {
 
         do {
             display();
+            // displayOrder();
         } while(true);
         
 
@@ -106,6 +110,14 @@ public class DisplayListTest implements Runnable {
         // } while (true);
     }
 
+    private void displayOrder() {
+        // display all orders from orders
+        for (Order order : orders) {
+            // order.displayData();
+            System.out.println("\n\t" + order.getOrderId() + "\n");
+        }
+    }
+
     public void display() {
         System.out.println("\n\t1. Get Order");
         System.out.println("\t2. Exit");
@@ -118,7 +130,7 @@ public class DisplayListTest implements Runnable {
                 try {
                     InetAddress ip = InetAddress.getLocalHost();
                     // serverSocket = new ServerSocket(ip, 8089);
-                    socket = new Socket(ip, 8085);
+                    // socket = new Socket(ip, 8085);
 
                     // bind to port 8089
                     // serverSocket = new ServerSocket(8085);
@@ -130,6 +142,9 @@ public class DisplayListTest implements Runnable {
                     ObjectOutputStream oos = new ObjectOutputStream(outStream);
                     oos.writeObject(order);
                     System.out.println("Order updated");
+
+                    oos.flush();
+                    oos.reset();
 
                     // oos.flush();
                     // oos.close();

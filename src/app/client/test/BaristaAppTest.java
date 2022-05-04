@@ -54,21 +54,22 @@ public class BaristaAppTest {
             int portNo = 8088;
             // serverSocket = new ServerSocket(portNo);
             Socket baristaSocket = new Socket(serverAddress, portNo);
+            Socket baristaToServerSocket = new Socket(serverAddress, 8085);
             // Socket baristaSocket = serverSocket.accept();
             // InetAddress serverAddress = InetAddress.getLocalHost();
 
             Runnable baristaGetter = null;
             Thread baristaThread = null;
 
-            baristaGetter = new BaristaGetterTest(serverSocket, baristaSocket);
+            baristaGetter = new BaristaGetterTest(serverSocket, baristaSocket, baristaToServerSocket);
             baristaThread = new Thread(baristaGetter);
 
             baristaThread.start();
 
-            Runnable displayList = new DisplayListTest(serverSocket, order, baristaSocket);
-            Thread thread = new Thread(displayList);
+            // Runnable displayList = new DisplayListTest(serverSocket, order, baristaSocket);
+            // Thread thread = new Thread(displayList);
 
-            thread.start();
+            // thread.start();
 
             // ObjectInputStream ois = null;
 

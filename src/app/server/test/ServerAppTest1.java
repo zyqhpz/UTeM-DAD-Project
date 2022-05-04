@@ -24,7 +24,7 @@ import model.Order;
  * @author haziqhapiz
  */
 
-public class ServerAppTest {
+public class ServerAppTest1 {
 
     // private Socket baristaSocket = null;
 
@@ -71,6 +71,8 @@ public class ServerAppTest {
 
             baristaSocket = baristaServerSocket.accept();
 
+            baristaGetter = baristaGetterSocket.accept();
+
             Runnable baristaSender = new BaristaFromServerTest(
                     baristaGetter, baristaServerSocket,
                     baristaGetterSocket);
@@ -78,74 +80,9 @@ public class ServerAppTest {
 
             baristaSenderThread.start();
 
-            // 2. Listen to request
-            while (!cashierServerSocket.isClosed()) {
-
-                // 3. Accept request from client
-                Socket clientSocket = cashierServerSocket.accept();
-
-                InputStream is = clientSocket.getInputStream();
-                ObjectInputStream ois = new ObjectInputStream(is);
-
-                // read Order object from cashier
-                order = (Order) ois.readObject();
-
-                orderManager = new OrderManager(order);
-
-                System.out.println("\n\tReceive an Order object from Cashier.\n");
-
-                // display data from Order object
-                // orderManager.displayData();
-
-                order.setOrderId(2);
-
-                // add order to orders
-                orders.add(order);
-
-                System.out.println("\n\tOrder added to the list. Now " + orders.size() + "\n");
-
-                System.out.println("\n\tWaiting for next request\n");
-
-                // start the barista as thread
-                // Runnable barista = new BaristaReceiver();
-
-                // try (Socket baristaSocket = new Socket(serverAddress, 8088);) {
-                try {
-
-                    // baristaSocket = new Socket(serverAddress, 8088);
-
-                    // barista = new BaristaReceiver(baristaSocket);
-                    // baristaThread = new Thread(barista);
-
-                    // baristaSocket = baristaServerSocket.accept();
-
-                    // Runnable baristaSender = new BaristaFromServerTest(baristaSocket, baristaServerSocket, 
-                    //         baristaGetterSocket);
-                    // baristaSenderThread = new Thread(baristaSender);
-
-                    // baristaSenderThread.start();
-
-                    OutputStream baristaOS = baristaSocket.getOutputStream();
-                    ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
-
-                    // baristaOOS.writeObject(order);
-
-                    // send orders to barista
-                    baristaOOS.writeObject(orders);
-
-                    System.out.println("\n\tOrder object sent to Barista.\n");
-
-                } catch (Exception e) {
-                    System.out.println("\n\tError: " + e.getMessage() + "\n");
-                }
-
-                // Runnable barista = new BaristaReceiver(baristaSocket);
-                // Thread baristaThread = new Thread(barista);
-                // baristaThread.start();
-
-                // baristaSenderThread.start();
-
-            }
+            Runnable clientToServer = new ClientToServer(cashierServerSocket, baristaServerSocket, baristaSocket);
+            Thread clientToServerThread = new Thread(clientToServer);
+            clientToServerThread.start();
 
         } catch (Exception e) {
 

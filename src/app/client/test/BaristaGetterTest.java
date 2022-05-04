@@ -20,6 +20,7 @@ public class BaristaGetterTest implements Runnable {
     private Socket baristaSocket = null;
     private InetAddress serverAddress = null;
     private ServerSocket serverSocket = null;
+    private Socket baristaToServerSocket = null;
 
     List<Order> orders = new ArrayList<Order>();
 
@@ -39,24 +40,28 @@ public class BaristaGetterTest implements Runnable {
     // public BaristaGetter(Socket baristaSocket) {
     // this.baristaSocket = baristaSocket;
     // }
-    public BaristaGetterTest(ServerSocket serverSocket, Socket baristaSocket) {
+    public BaristaGetterTest(ServerSocket serverSocket, Socket baristaSocket, Socket baristaToServerSocket) {
         this.serverSocket = serverSocket;
         this.baristaSocket = baristaSocket;
+        this.baristaToServerSocket = baristaToServerSocket;
     }
 
     @Override
     public void run() {
+        Runnable displayList =  null;
+        Thread thread = null;
         // Socket baristaSocket = null;
         // while (!serverSocket.isClosed()) {
         while (!baristaSocket.isClosed()) {
             // Runnable displayList = new DisplayList(serverSocket);
             // Thread thread = new Thread(displayList);
 
-            Runnable displayList = new DisplayListTest(serverSocket, order, baristaSocket);
-            Thread thread = new Thread(displayList);
+            // Runnable displayList = new DisplayListTest(serverSocket, order, baristaSocket, orders);
+            // Thread thread = new Thread(displayList);
             try {
                 // Socket socket = serverSocket.accept();
                 Socket socket = baristaSocket;
+                // Socket baristaToServerSocket = new Socket(serverAddress, 8085);
 
                 InputStream inStream = socket.getInputStream();
                 // ObjectInputStream ois = new ObjectInputStream(inStream);
@@ -68,8 +73,11 @@ public class BaristaGetterTest implements Runnable {
                 // List<Order> orders = (ArrayList<Order>)(ois.readObject());
                 
                 // orders = (List<Order>) ois.readObject();
+                List<Order> orders = new ArrayList<Order>();
 
-                Object obj = ois.readObject();
+                try {
+                    
+Object obj = ois.readObject();
                 // Check it's an ArrayList
                 if (obj instanceof ArrayList<?>) {
                     // Get the List.
@@ -82,11 +90,22 @@ public class BaristaGetterTest implements Runnable {
                             if (o instanceof Order) {
                                 // Here we go!
                                 Order v = (Order) o;
+                                orders.add(v);
                                 // use v.
                             }
                         }
                     }
                 }
+                displayList = new DisplayListTest(serverSocket, order, baristaToServerSocket, orders);
+                thread = new Thread(displayList);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                
+
+                // Runnable displayList = new DisplayListTest(serverSocket, order, baristaToServerSocket, orders);
+                // Thread thread = new Thread(displayList);
 
                 // new ArrayList<>(Arrays.asList(sos1.getValue()));
                 System.out.println("Get orders object from server");
