@@ -68,6 +68,8 @@ public class BaristaFromServerTest implements Runnable {
 
         while(baristaSocket.isConnected()) {
 
+            baristaSocket = baristaGetterSocket.accept();
+
             InputStream baristaIS = baristaSocket.getInputStream();
             ObjectInputStream baristaOIS = new ObjectInputStream(baristaIS);
 

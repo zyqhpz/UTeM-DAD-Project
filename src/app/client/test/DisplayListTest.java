@@ -125,12 +125,13 @@ public class DisplayListTest implements Runnable {
         Scanner sc = new Scanner(System.in);
         System.out.print(">> ");
         int choice = sc.nextInt();
+        sc.reset();
         switch (choice) {
             case 1:
                 try {
                     InetAddress ip = InetAddress.getLocalHost();
                     // serverSocket = new ServerSocket(ip, 8089);
-                    // socket = new Socket(ip, 8085);
+                    socket = new Socket(ip, 8085);
 
                     // bind to port 8089
                     // serverSocket = new ServerSocket(8085);
