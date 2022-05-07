@@ -24,7 +24,7 @@ public class ClientToServer implements Runnable {
     private Socket baristaSocket = null;
     private Order order;
     private OrderManager orderManager;
-        private List<Order> orders = new ArrayList<Order>();
+    private List<Order> orders = new ArrayList<Order>();
 
 
     public ClientToServer(ServerSocket cashierServerSocket, ServerSocket baristaServerSocket, Socket baristaSocket ) {
@@ -63,28 +63,7 @@ public class ClientToServer implements Runnable {
 
                 System.out.println("\n\tWaiting for next request\n");
 
-                // start the barista as thread
-                // Runnable barista = new BaristaReceiver();
-
-                // try (Socket baristaSocket = new Socket(serverAddress, 8088);) {
                 try {
-
-                    // baristaSocket = new Socket(serverAddress, 8088);
-
-                    // barista = new BaristaReceiver(baristaSocket);
-                    // baristaThread = new Thread(barista);
-
-                    // baristaSocket = baristaServerSocket.accept();
-
-                    // Runnable baristaSender = new BaristaFromServerTest(baristaSocket, baristaServerSocket, 
-                    //         baristaGetterSocket);
-                    // baristaSenderThread = new Thread(baristaSender);
-
-                    // baristaSenderThread.start();
-
-                    // baristaSocket = new Socket(InetAddress.getLocalHost(), 8088);
-
-                    // baristaSocket = baristaServerSocket.accept();
 
                     OutputStream baristaOS = baristaSocket.getOutputStream();
                     ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);

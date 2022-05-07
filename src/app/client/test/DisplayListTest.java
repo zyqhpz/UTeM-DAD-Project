@@ -125,6 +125,7 @@ public class DisplayListTest implements Runnable {
         Scanner sc = new Scanner(System.in);
         System.out.print(">> ");
         int choice = sc.nextInt();
+        sc.nextLine();
         sc.reset();
         switch (choice) {
             case 1:
