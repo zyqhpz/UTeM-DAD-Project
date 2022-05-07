@@ -67,7 +67,7 @@ public class HornettTeaOrderServerApp {
 
 				// display data from Order object
 				orderManager.displayData();
-
+				
 				// Send Order object to Barista
 				// Socket baristaSocket = baristaServerSocket.accept();
 
@@ -90,14 +90,16 @@ public class HornettTeaOrderServerApp {
 				// try (Socket baristaSocket = new Socket(serverAddress, 8088);) {
 				try {
 
-					baristaSocket = new Socket(serverAddress, 8088);
-
+					//baristaSocket = new Socket(serverAddress, 8088);
+					ServerSocket socket = new ServerSocket(8088);
+					baristaSocket = socket.accept();
+					
 					// Send Order object to Barista
 					// Socket baristaSocket = baristaServerSocket.accept();
-
+					
 					OutputStream baristaOS = baristaSocket.getOutputStream();
 					ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
-
+					
 					baristaOOS.writeObject(order);
 
 					System.out.println("\n\tOrder object sent to Barista.\n");
