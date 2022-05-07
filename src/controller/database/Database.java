@@ -13,5 +13,5 @@ public class Database {
         Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ht_db", "root", "");
         return conn;
     }
-
+    
 }
