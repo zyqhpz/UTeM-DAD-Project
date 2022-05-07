@@ -1,5 +1,7 @@
 package app.client.test;
 
+import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
@@ -25,6 +27,9 @@ public class CashierAppTest {
         System.out.println("\n\nStarting HornettTeaOrderCashierApp..\n");
 
         Order order;
+        Socket socket;
+
+        List<ItemProduct> itemProducts = new ArrayList<ItemProduct>();
 
         try {
 
@@ -32,16 +37,54 @@ public class CashierAppTest {
             int serverPortNo = 8087;
             InetAddress serverAddress = InetAddress.getLocalHost();
 
+            socket = new Socket(serverAddress, serverPortNo);
+
+            InputStream is = socket.getInputStream();
+            ObjectInputStream ois = new ObjectInputStream(is);
+
+            try {
+                Object obj = ois.readObject();
+                // Check it's an ArrayList
+                if (obj instanceof ArrayList<?>) {
+                    // Get the List.
+                    ArrayList<?> al = (ArrayList<?>) obj;
+                    if (al.size() > 0) {
+                        // Iterate.
+                        for (int i = 0; i < al.size(); i++) {
+                            // Still not enough for a type.
+                            Object o = al.get(i);
+                            if (o instanceof ItemProduct) {
+                                // Here we go!
+                                ItemProduct v = (ItemProduct) o;
+                                itemProducts.add(v);
+                                // use v.
+                            }
+                        }
+                    }
+                }
+
+                ois.close();
+                is.close();
+                socket.close();
+
+                System.out.println("\n\t ItemProducts received \n");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             int send = 0;
 
             do {
 
                 Scanner sc = new Scanner(System.in);
+                displayItemProducts(itemProducts);
                 System.out.print("\tSend? >> ");
                 send = sc.nextInt();
 
                 if (send == 1) {
-                    Socket socket = new Socket(serverAddress, serverPortNo);
+                    // Socket socket = new Socket(serverAddress, serverPortNo);
+                    socket = new Socket(serverAddress, serverPortNo);
 
                     order = loadOrder();
 
@@ -109,5 +152,12 @@ public class CashierAppTest {
         order.setGrandTotal(19.00);
 
         return order;
+    }
+
+    public static void displayItemProducts(List<ItemProduct> itemProducts) {
+        System.out.println("\n\nItem products are: \n");
+        for (ItemProduct itemProduct : itemProducts) {
+            System.out.println(itemProduct.getName() + " " + itemProduct.getPrice());
+        }
     }
 }

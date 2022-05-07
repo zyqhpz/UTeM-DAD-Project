@@ -13,7 +13,9 @@ import java.util.List;
 
 import app.server.thread.BaristaReceiver;
 import controller.OrderManager;
+import controller.ItemProductManager;
 import controller.database.Database;
+import model.ItemProduct;
 import model.Order;
 
 /**
@@ -39,8 +41,12 @@ public class ServerAppTest1 {
 
         Order order;
         OrderManager orderManager;
+        ItemProductManager itemProductManager = new ItemProductManager();
 
         Socket baristaSocket = null;
+
+        List<ItemProduct> itemProducts = new ArrayList<ItemProduct>();
+        itemProducts = itemProductManager.loadItemProducts();
 
         try {
 
@@ -51,6 +57,14 @@ public class ServerAppTest1 {
             // bind to a port
             int portNo = 8087;
             cashierServerSocket = new ServerSocket(portNo);
+
+            // Socket clientSocket = cashierServerSocket.accept();
+            
+            // OutputStream outStream = clientSocket.getOutputStream();
+            // ObjectOutputStream oos = new ObjectOutputStream(outStream);
+
+            // oos.writeObject(itemProducts);
+            
             InetAddress serverAddress = InetAddress.getLocalHost();
             // Socket baristaSocket = new Socket(serverAddress, 8088);
 
@@ -68,6 +82,20 @@ public class ServerAppTest1 {
             Runnable barista = null;
             Thread baristaThread = null;
             Thread baristaSenderThread = null;
+
+            try {
+                Socket cashierSocket = cashierServerSocket.accept();
+
+                OutputStream outStream = cashierSocket.getOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(outStream);
+
+            oos.writeObject(itemProducts);
+            
+            System.out.println("\tItemProducts sent to Cashier\n");
+
+            } catch (Exception e) {
+                System.out.println("\tNo request from Cashier\n");
+            }
 
             baristaSocket = baristaServerSocket.accept();
 
