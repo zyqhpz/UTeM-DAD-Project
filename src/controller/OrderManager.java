@@ -1,6 +1,7 @@
 package controller;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
 // import java.sql.Date;
@@ -93,7 +94,7 @@ public class OrderManager {
 
         String sql = "INSERT INTO order (orderId, orderNumber, transactionDate, totalOrderItem, subTotal, serviceTax, rounding, grandTotal, tenderedCash, change) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        java.sql.PreparedStatement pstmt = conn.prepareStatement(sql);
+        PreparedStatement pstmt = conn.prepareStatement(sql);
 
         // set the values
         orderId = order.getOrderId();
@@ -142,7 +143,7 @@ public class OrderManager {
 
             String sql = "INSERT INTO orderItem (orderItemId, orderId, itemProductId, quantity, subTotalAmount, sequenceNumber) VALUES (?, ?, ?, ?, ?, ?)";
 
-            java.sql.PreparedStatement pstmt = conn.prepareStatement(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
             // set the values
             orderItemId = orderItem.getOrderItemId();
@@ -184,7 +185,7 @@ public class OrderManager {
 
             String sql = "UPDATE orderItem SET orderStatus = ?, readyTime = ? WHERE orderItemId = ?";
 
-            java.sql.PreparedStatement pstmt = conn.prepareStatement(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql);
 
             pstmt.setString(1, orderStatus);
             pstmt.setDate(2, new java.sql.Date(readyTime.getTime()));
