@@ -39,7 +39,7 @@ public class PreparationCounterApp {
 			DataOutputStream dos = new DataOutputStream(os);
 			
 			// Send request to the server
-			String orderStatus = "preparing";
+			String orderStatus = "Processing";
 			dos.writeUTF(orderStatus);
 			
 			// Create stream to receive respond from server
@@ -73,7 +73,7 @@ public class PreparationCounterApp {
 					orderItem = (OrderItem) OrderItemois.readObject();
 				
 					// Process the respond
-					preparationCounterView.displayOrdersDetails(orderItem);
+					
 			
 				}
 				
