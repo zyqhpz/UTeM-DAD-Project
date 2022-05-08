@@ -1,14 +1,11 @@
 package view;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import controller.OrderItemManager;
-import controller.OrderManager;
-import controller.database.Database;
 import model.Order;
 import model.OrderItem;
 
@@ -28,6 +25,7 @@ public class PreparationCounterView {
     	return sc.nextInt();
     }
 	
+    /*
 	// This method displays the latest order details at the preparation counter
 	public void displayOrders(Order order) {
 		
@@ -38,8 +36,22 @@ public class PreparationCounterView {
 		
 	
 	}
+	*/
 	
-	public Order printSticker(int userRespond) {
+	public void displayOrders(List<Order> order) {
+		
+		for (int i = 0; i < order.size(); i++) 
+			orderList.add(order.get(i));
+		
+		for(Order orders: order) 
+		System.out.println("\t" + orders.getOrderNumber() + "\t\t\t\t" 
+				+ orders.getTotalOrderItem());
+		
+		
+	}
+	
+	
+	public Order printSticker(int userRespond) throws ParseException {
 		
 		int orderNumber;
 		List<OrderItem> orderItem;
@@ -54,6 +66,10 @@ public class PreparationCounterView {
 				
 				for(OrderItem orderItems : orderItem)
 				{
+			        long datetime =System.currentTimeMillis();  
+			        Date now = new java.sql.Timestamp(datetime);  
+			        orderItems.setReadyTime(now);
+					
 					System.out.println("\n\t----------------------------------" 
 							+ "----------------");
 					System.out.println("\tHornettTea FTMK UTeM");
@@ -68,18 +84,6 @@ public class PreparationCounterView {
 							+ "----------------\n");
 					
 					orderItems.setOrderStatus("Ready");
-					
-					/*
-					OrderItemManager orderItemManager = new OrderItemManager();
-					try {
-						orderItemManager.updateOrderStatus
-								(orderItems.getOrderItemId());
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
-					} catch (SQLException e) {
-						e.printStackTrace();
-					}
-					*/
 				}
 				
 				orderExist = true;
