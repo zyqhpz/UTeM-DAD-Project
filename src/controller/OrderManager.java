@@ -62,6 +62,33 @@ public class OrderManager {
         }
     }
 
+    public List<Order> loadData() throws ClassNotFoundException, SQLException {
+        db = new Database();
+        conn = db.doConnection();
+
+        String sql = "SELECT * FROM Order";
+
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+        List<Order> orders = new ArrayList<Order>();
+
+        ResultSet rs = pstmt.executeQuery();
+
+        while (rs.next()) {
+            Order order = new Order();
+            order.setOrderId(rs.getInt("OrderId"));
+            order.setOrderNumber(rs.getString("OrderNumber"));
+            order.setTransactionDate(rs.getDate("TransactionDate"));
+            order.setTotalOrderItem(rs.getInt("TotalOrderItem"));
+            order.setSubTotal(rs.getDouble("SubTotal"));
+            order.setServiceTax(rs.getDouble("ServiceTax"));
+            order.setRounding(rs.getDouble("Rounding"));
+            order.setGrandTotal(rs.getDouble("GrandTotal"));
+            order.setTenderedCash(rs.getDouble("TenderedCash"));
+            order.setChange(rs.getDouble("Change"));
+        }
+    }
+
     /* Insert Order data into database
      * 
      */

@@ -38,6 +38,21 @@ public class PreparationCounterView {
 		
 	
 	}
+
+	public void displayOrders(List<Order> orders) {
+
+		for (Order order : orders) {
+			orderList.add(order);
+			System.out.println("\t" + order.getOrderNumber() + "\t\t\t\t"
+					+ order.getTotalOrderItem());
+		}
+
+		// orderList.add(order);
+
+		// System.out.println("\t" + order.getOrderNumber() + "\t\t\t\t"
+		// 		+ order.getTotalOrderItem());
+
+	}
 	
 	public Order printSticker(int userRespond) {
 		
