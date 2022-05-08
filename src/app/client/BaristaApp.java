@@ -6,7 +6,11 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.*;
 
 import model.Order;
 import model.OrderItem;
@@ -66,7 +70,6 @@ public class BaristaApp {
         
         System.out.println("\n\nStarting BaristaApp..\n");
 
-        Order order = null;
         PreparationCounterView preparationCounterView = 
 				new PreparationCounterView();
 
@@ -101,8 +104,43 @@ public class BaristaApp {
 						+ "\tOrder Number\t\t\tQuantity");
 						// while (ois.available() > 0) {
 
-						order = (Order) ois.readObject();
-						preparationCounterView.displayOrders(order);
+						/*
+						Object obj = ois.readObject();
+	                    // Check it's an ArrayList
+	                    if (obj instanceof ArrayList<?>) {
+	                        // Get the List.
+	                        ArrayList<?> al = (ArrayList<?>) obj;
+	                        if (al.size() > 0) {
+	                            // Iterate.
+	                            for (int i = 0; i < al.size(); i++) {
+	                                // Still not enough for a type.
+	                                Object o = al.get(i);
+	                                if (o instanceof Order) {
+	                                    // Here we go!
+	                                    Order v = (Order) o;
+	                                    orders.add(v);
+	                                    // use v.
+						*/				
+						List<Order> orders = new ArrayList<Order>();
+
+						Object order = ois.readObject();
+	                    if (order instanceof ArrayList<?>) {
+	                        ArrayList<?> orderlist = (ArrayList<?>) order;
+	                        if (orderlist.size() > 0) {
+	                            for (int counter = 0; counter < orderlist.size(); counter++) {
+	                                Object o = orderlist.get(counter);
+	                               if (o instanceof Order) {
+	                                    Order latestorder = (Order) o;
+	                                    orders.add(latestorder);
+	                                    preparationCounterView.displayOrders(orders);
+	                               }
+	                            }
+	                        }
+                 		}
+			
+						//Order order = (Order) ois.readObject();
+	                    //orders.add(order);
+						//preparationCounterView.displayOrders(orders);
 						// System.out.println("\t" + order.getOrderNumber() +
 						// "\t\t\t" + order.getTotalOrderItem());
 						// }
@@ -113,8 +151,10 @@ public class BaristaApp {
 						System.out.print("\t>> ");
 						int optionToViewDetails = sc.nextInt();
 
-						if (optionToViewDetails == 0)
+						if (optionToViewDetails == 0) {
+							clearScreen();
 							break;
+						}
 						else {
 							// Print stickers
 							clearScreen();
