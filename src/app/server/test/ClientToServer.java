@@ -26,19 +26,18 @@ public class ClientToServer implements Runnable {
     private OrderManager orderManager;
     private List<Order> orders = new ArrayList<Order>();
 
-
-    public ClientToServer(ServerSocket cashierServerSocket, ServerSocket baristaServerSocket, Socket baristaSocket ) {
+    public ClientToServer(ServerSocket cashierServerSocket, ServerSocket baristaServerSocket, Socket baristaSocket) {
         this.cashierServerSocket = cashierServerSocket;
         this.baristaServerSocket = baristaServerSocket;
         this.baristaSocket = baristaSocket;
     }
-    
+
     @Override
     public void run() {
         while (!cashierServerSocket.isClosed()) {
 
             try {
- // 3. Accept request from client
+                // 3. Accept request from client
                 Socket clientSocket = cashierServerSocket.accept();
 
                 InputStream is = clientSocket.getInputStream();
@@ -49,6 +48,8 @@ public class ClientToServer implements Runnable {
 
                 orderManager = new OrderManager(order);
 
+                // TODO: insert order into database
+
                 System.out.println("\n\tReceive an Order object from Cashier.\n");
 
                 // display data from Order object
@@ -58,6 +59,9 @@ public class ClientToServer implements Runnable {
 
                 // add order to orders
                 orders.add(order);
+
+                // TODO: load orders from database
+                orders = orderManager.loadData();
 
                 System.out.println("\n\tOrder added to the list. Now " + orders.size() + "\n");
 
@@ -84,4 +88,3 @@ public class ClientToServer implements Runnable {
         }
     }
 }
-    

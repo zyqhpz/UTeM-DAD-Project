@@ -25,7 +25,6 @@ public class PreparationCounterMainMenu implements Runnable {
     private Order order;
 
     private List<Order> orders = new ArrayList<Order>();
-    
 
     public PreparationCounterMainMenu(ServerSocket serverSocket, Order order, Socket socket, List<Order> orders) {
         this.serverSocket = serverSocket;
@@ -66,7 +65,8 @@ public class PreparationCounterMainMenu implements Runnable {
                     // ObjectInputStream ois = new ObjectInputStream(is);
                     do {
                         // Display latest list of pending orders
-                        clearScreen();
+                        // clearScreen();
+                        ClearScreen.ClearConsole();
                         System.out.println("\n\t--- Pending Orders ---\n"
                                 + "\tOrder Number\t\t\tQuantity");
                         // while (ois.available() > 0) {
@@ -89,7 +89,8 @@ public class PreparationCounterMainMenu implements Runnable {
                             break;
                         else {
                             // Print stickers
-                            clearScreen();
+                            // clearScreen();
+                            ClearScreen.ClearConsole();
                             Order updatedOrder = preparationCounterView.printSticker(optionToViewDetails);
 
                             if (updatedOrder == null)
@@ -106,9 +107,22 @@ public class PreparationCounterMainMenu implements Runnable {
                                 // 5. Set order item status to "Ready"
                                 // 6. Send Order object to server
                                 // Socket socket = new Socket(serverAddress, serverPortNo);
+                                // OutputStream outStream = socket.getOutputStream();
+                                // ObjectOutputStream oos = new ObjectOutputStream(outStream);
+                                // oos.writeObject(updatedOrder);
+
+                                // InetAddress serverAddress = InetAddress.getLocalHost();
+
+                                // remove updated order from list
+                                orders.remove(updatedOrder);
+
+                                socket = new Socket(serverAddress, 8085);
+
+                                // order.setOrderId(2);
                                 OutputStream outStream = socket.getOutputStream();
                                 ObjectOutputStream oos = new ObjectOutputStream(outStream);
                                 oos.writeObject(updatedOrder);
+                                System.out.println("Order updated");
 
                                 socket.close();
                                 outStream.flush();
@@ -117,7 +131,8 @@ public class PreparationCounterMainMenu implements Runnable {
                                 oos.close();
 
                                 // 7. Redirect to main menu
-                                clearScreen();
+                                // clearScreen();
+                                ClearScreen.ClearConsole();
                                 break;
 
                             } else if (optionToUpdateStatus == 0) {

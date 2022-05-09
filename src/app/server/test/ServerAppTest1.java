@@ -59,12 +59,12 @@ public class ServerAppTest1 {
             cashierServerSocket = new ServerSocket(portNo);
 
             // Socket clientSocket = cashierServerSocket.accept();
-            
+
             // OutputStream outStream = clientSocket.getOutputStream();
             // ObjectOutputStream oos = new ObjectOutputStream(outStream);
 
             // oos.writeObject(itemProducts);
-            
+
             InetAddress serverAddress = InetAddress.getLocalHost();
             // Socket baristaSocket = new Socket(serverAddress, 8088);
 
@@ -87,11 +87,11 @@ public class ServerAppTest1 {
                 Socket cashierSocket = cashierServerSocket.accept();
 
                 OutputStream outStream = cashierSocket.getOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(outStream);
+                ObjectOutputStream oos = new ObjectOutputStream(outStream);
 
-            oos.writeObject(itemProducts);
-            
-            System.out.println("\tItemProducts sent to Cashier\n");
+                oos.writeObject(itemProducts);
+
+                System.out.println("\tItemProducts sent to Cashier\n");
 
             } catch (Exception e) {
                 System.out.println("\tNo request from Cashier\n");
@@ -115,7 +115,7 @@ public class ServerAppTest1 {
         } catch (Exception e) {
 
             // if (serverSocket != null) {
-            //     serverSocket.close();
+            // serverSocket.close();
             // }
 
             e.printStackTrace();

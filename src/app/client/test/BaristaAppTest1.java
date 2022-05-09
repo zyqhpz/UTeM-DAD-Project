@@ -94,7 +94,8 @@ public class BaristaAppTest1 {
                     ObjectInputStream ois = new ObjectInputStream(is);
                     do {
                         // Display latest list of pending orders
-                        clearScreen();
+                        // clearScreen();
+                        ClearScreen.ClearConsole();
                         System.out.println("\n\t--- Pending Orders ---\n"
                                 + "\tOrder Number\t\t\tQuantity");
                         // while (ois.available() > 0) {

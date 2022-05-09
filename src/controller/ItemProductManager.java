@@ -14,6 +14,34 @@ public class ItemProductManager {
     public ItemProductManager() {
     }
 
+    public ItemProduct getItemProduct(int itemProductId) throws ClassNotFoundException, SQLException {
+        ItemProduct itemProduct = new ItemProduct();
+
+        String sql = "SELECT * FROM itemproduct WHERE ItemProductId = ?";
+
+        Connection conn = Database.doConnection();
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            preparedStatement.setInt(1, itemProductId);
+            java.sql.ResultSet rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+                itemProduct.setItemProductId(rs.getInt("ItemProductId"));
+                itemProduct.setName(rs.getString("Name"));
+                itemProduct.setLabelName(rs.getString("LabelName"));
+                itemProduct.setPrice(rs.getDouble("Price"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        // close the connection
+        conn.close();
+
+        return itemProduct;
+    }
+
     public List<ItemProduct> loadItemProducts() throws ClassNotFoundException, SQLException {
         List<ItemProduct> itemProducts = new ArrayList<ItemProduct>();
 
@@ -24,7 +52,7 @@ public class ItemProductManager {
         Connection conn = Database.doConnection();
 
         // create a query to get all the item products
-        String query = "SELECT * FROM ItemProduct";
+        String query = "SELECT * FROM itemproduct";
 
         // create a prepared statement
         PreparedStatement pstmt = conn.prepareStatement(query);
