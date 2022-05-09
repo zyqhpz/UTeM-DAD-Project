@@ -69,10 +69,7 @@ public class OrderManager {
         db = new Database();
         conn = db.doConnection();
 
-        // String sql = "SELECT * FROM Order";
-        // String sql = "SELECT * FROM `order` JOIN OrderItem ON OrderItem.Order =
-        // `order`.OrderId";
-        String sql = "SELECT * FROM `order` JOIN OrderItem ON OrderItem.Order = `order`.OrderId GROUP BY `order`.OrderId";
+        String sql = "SELECT * FROM `order` JOIN OrderItem ON OrderItem.Order = `order`.OrderId WHERE OrderItem.OrderStatus = 'Processing' GROUP BY `order`.OrderId";
 
         PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -193,8 +190,6 @@ public class OrderManager {
             quantity = orderItem.getQuantity();
             subTotalAmount = orderItem.getSubTotalAmount();
             sequenceNumber = orderItem.getSequenceNumber();
-            // orderStatus = orderItem.getOrderStatus();
-            // readyTime = orderItem.getReadyTime();
 
             pstmt.setInt(1, orderItemId);
             pstmt.setInt(2, order.getOrderId());
