@@ -31,10 +31,7 @@ public class PreparationCounterApp {
 		try {
 
 			// Server information
-			int serverPortNo = 8088;
 			InetAddress serverAddress = InetAddress.getLocalHost();
-
-			int send = 0;
 
 			int portNo = 8088;
 			Socket baristaSocket = new Socket(serverAddress, portNo);

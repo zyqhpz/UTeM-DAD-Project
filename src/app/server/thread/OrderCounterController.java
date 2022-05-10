@@ -1,34 +1,27 @@
-package app.server.test;
+package app.server.thread;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
-
-import app.server.thread.BaristaReceiver;
 import controller.OrderManager;
-import controller.database.Database;
 import model.Order;
 
-public class ClientToServer implements Runnable {
+public class OrderCounterController implements Runnable {
 
     private ServerSocket cashierServerSocket = null;
-    private ServerSocket baristaServerSocket = null;
-    private Socket cashierSocket = null;
     private Socket baristaSocket = null;
     private Order order;
     private OrderManager orderManager;
     private List<Order> orders = new ArrayList<Order>();
 
-    public ClientToServer(ServerSocket cashierServerSocket, ServerSocket baristaServerSocket, Socket baristaSocket) {
+    public OrderCounterController(ServerSocket cashierServerSocket,
+            Socket baristaSocket) {
         this.cashierServerSocket = cashierServerSocket;
-        this.baristaServerSocket = baristaServerSocket;
         this.baristaSocket = baristaSocket;
     }
 
@@ -46,19 +39,10 @@ public class ClientToServer implements Runnable {
                 // read Order object from cashier
                 order = (Order) ois.readObject();
 
+                // TODO: insert order into database
                 orderManager = new OrderManager(order);
 
-                // TODO: insert order into database
-
                 System.out.println("\n\tReceive an Order object from Cashier.\n");
-
-                // display data from Order object
-                // orderManager.displayData();
-
-                order.setOrderId(2);
-
-                // add order to orders
-                orders.add(order);
 
                 orders = null;
                 orders = orderManager.loadData();
@@ -72,8 +56,6 @@ public class ClientToServer implements Runnable {
 
                         OutputStream baristaOS = baristaSocket.getOutputStream();
                         ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
-
-                        // baristaOOS.writeObject(order);
 
                         // send orders to barista
                         baristaOOS.writeObject(orders);
