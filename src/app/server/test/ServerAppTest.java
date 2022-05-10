@@ -119,8 +119,9 @@ public class ServerAppTest {
 
                     // baristaSocket = baristaServerSocket.accept();
 
-                    // Runnable baristaSender = new BaristaFromServerTest(baristaSocket, baristaServerSocket, 
-                    //         baristaGetterSocket);
+                    // Runnable baristaSender = new BaristaFromServerTest(baristaSocket,
+                    // baristaServerSocket,
+                    // baristaGetterSocket);
                     // baristaSenderThread = new Thread(baristaSender);
 
                     // baristaSenderThread.start();
@@ -150,7 +151,7 @@ public class ServerAppTest {
         } catch (Exception e) {
 
             // if (serverSocket != null) {
-            //     serverSocket.close();
+            // serverSocket.close();
             // }
 
             e.printStackTrace();

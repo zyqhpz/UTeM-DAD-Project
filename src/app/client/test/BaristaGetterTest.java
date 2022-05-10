@@ -66,7 +66,9 @@ public class BaristaGetterTest implements Runnable {
                             }
                         }
                     }
-                    BaristaMainMenu = new DisplayListTest(serverSocket, order, baristaToServerSocket, orders);
+                    //BaristaMainMenu = new DisplayListTest(serverSocket, order, baristaToServerSocket, orders);
+                    BaristaMainMenu = new PreparationCounterMainMenu(serverSocket, order, baristaToServerSocket, orders);
+
                     baristaMainMenuThread = new Thread(BaristaMainMenu);
                 } catch (Exception e) {
                     e.printStackTrace();

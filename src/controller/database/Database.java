@@ -8,10 +8,13 @@ public class Database {
     static Connection conn = null;
 
     public static Connection doConnection() throws ClassNotFoundException, SQLException {
-        Class.forName("com.mysql.jdbc.Driver");
-
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("Cannot find the driver in the classpath!", e);
+        }
         Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/ht_db", "root", "");
+
         return conn;
     }
-    
 }

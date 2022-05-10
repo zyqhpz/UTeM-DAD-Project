@@ -26,19 +26,18 @@ public class ClientToServer implements Runnable {
     private OrderManager orderManager;
     private List<Order> orders = new ArrayList<Order>();
 
-
-    public ClientToServer(ServerSocket cashierServerSocket, ServerSocket baristaServerSocket, Socket baristaSocket ) {
+    public ClientToServer(ServerSocket cashierServerSocket, ServerSocket baristaServerSocket, Socket baristaSocket) {
         this.cashierServerSocket = cashierServerSocket;
         this.baristaServerSocket = baristaServerSocket;
         this.baristaSocket = baristaSocket;
     }
-    
+
     @Override
     public void run() {
         while (!cashierServerSocket.isClosed()) {
 
             try {
- // 3. Accept request from client
+                // 3. Accept request from client
                 Socket clientSocket = cashierServerSocket.accept();
 
                 InputStream is = clientSocket.getInputStream();
@@ -48,6 +47,8 @@ public class ClientToServer implements Runnable {
                 order = (Order) ois.readObject();
 
                 orderManager = new OrderManager(order);
+
+                // TODO: insert order into database
 
                 System.out.println("\n\tReceive an Order object from Cashier.\n");
 
@@ -59,24 +60,31 @@ public class ClientToServer implements Runnable {
                 // add order to orders
                 orders.add(order);
 
+                orders = null;
+                orders = orderManager.loadData();
+
                 System.out.println("\n\tOrder added to the list. Now " + orders.size() + "\n");
 
                 System.out.println("\n\tWaiting for next request\n");
 
-                try {
+                if (orders != null) {
+                    try {
 
-                    OutputStream baristaOS = baristaSocket.getOutputStream();
-                    ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
+                        OutputStream baristaOS = baristaSocket.getOutputStream();
+                        ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
 
-                    // baristaOOS.writeObject(order);
+                        // baristaOOS.writeObject(order);
 
-                    // send orders to barista
-                    baristaOOS.writeObject(orders);
+                        // send orders to barista
+                        baristaOOS.writeObject(orders);
 
-                    System.out.println("\n\tOrder object sent to Barista.\n");
+                        System.out.println("\n\tOrder object sent to Barista.\n");
 
-                } catch (Exception e) {
-                    System.out.println("\n\tError: " + e.getMessage() + "\n");
+                    } catch (Exception e) {
+                        System.out.println("\n\tError: " + e.getMessage() + "\n");
+                    }
+                } else {
+                    System.out.println("\n\tOrders retrieve is blank.\n");
                 }
             } catch (Exception e) {
                 System.out.println("\n\tError: " + e.getMessage() + "\n");
@@ -84,4 +92,3 @@ public class ClientToServer implements Runnable {
         }
     }
 }
-    

@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import controller.OrderItemManager;
 import model.*;
 
 public class BaristaFromServerTest implements Runnable {
@@ -13,35 +14,37 @@ public class BaristaFromServerTest implements Runnable {
     private Order order;
     private ServerSocket baristaServerSocket = null;
     private ServerSocket baristaGetterSocket = null;
-    public BaristaFromServerTest(Socket baristaSocket, ServerSocket baristaServerSocket, ServerSocket baristaGetterSocket) {
+
+    public BaristaFromServerTest(Socket baristaSocket, ServerSocket baristaServerSocket,
+            ServerSocket baristaGetterSocket) {
         this.baristaSocket = baristaSocket;
         this.baristaServerSocket = baristaServerSocket;
         this.baristaGetterSocket = baristaGetterSocket;
         // try {
-        //     // bind to a port
-        //     int portNo = 8088;
-        //     InetAddress serverAddress = InetAddress.getLocalHost();
-        //     // Socket baristaSocket = new Socket(serverAddress, portNo);
+        // // bind to a port
+        // int portNo = 8088;
+        // InetAddress serverAddress = InetAddress.getLocalHost();
+        // // Socket baristaSocket = new Socket(serverAddress, portNo);
 
-        //     // Send Order object to Barista
-        //     // Socket baristaSocket = baristaServerSocket.accept();
+        // // Send Order object to Barista
+        // // Socket baristaSocket = baristaServerSocket.accept();
 
-        //     InputStream baristaIS = baristaSocket.getInputStream();
-        //     ObjectInputStream baristaOIS = new ObjectInputStream(baristaIS);
+        // InputStream baristaIS = baristaSocket.getInputStream();
+        // ObjectInputStream baristaOIS = new ObjectInputStream(baristaIS);
 
-        //     // OutputStream baristaOS = baristaSocket.getOutputStream();
-        //     // ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
+        // // OutputStream baristaOS = baristaSocket.getOutputStream();
+        // // ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
 
-        //     // baristaOOS.writeObject(order);
-        //     // order = (Order) baristaOIS.readObject();
-        //     int orderId = baristaOIS.readInt();
+        // // baristaOOS.writeObject(order);
+        // // order = (Order) baristaOIS.readObject();
+        // int orderId = baristaOIS.readInt();
 
-        //     // System.out.println("\n\tOrder object received from Barista.\n");
-        //     System.out.println("\n\tOrder " + orderId + " get from Barista.\n");
+        // // System.out.println("\n\tOrder object received from Barista.\n");
+        // System.out.println("\n\tOrder " + orderId + " get from Barista.\n");
 
-        //     baristaSocket.close();
+        // baristaSocket.close();
         // } catch (Exception e) {
-        //     e.printStackTrace();
+        // e.printStackTrace();
         // }
     }
 
@@ -66,34 +69,44 @@ public class BaristaFromServerTest implements Runnable {
             // InputStream baristaIS = baristaSocket.getInputStream();
             // ObjectInputStream baristaOIS = new ObjectInputStream(baristaIS);
 
-        while(baristaSocket.isConnected()) {
+            while (baristaSocket.isConnected()) {
 
-            baristaSocket = baristaGetterSocket.accept();
+                baristaSocket = baristaGetterSocket.accept();
 
-            InputStream baristaIS = baristaSocket.getInputStream();
-            ObjectInputStream baristaOIS = new ObjectInputStream(baristaIS);
+                InputStream baristaIS = baristaSocket.getInputStream();
+                ObjectInputStream baristaOIS = new ObjectInputStream(baristaIS);
 
+                // OutputStream baristaOS = baristaSocket.getOutputStream();
+                // ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
 
-            // OutputStream baristaOS = baristaSocket.getOutputStream();
-            // ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
+                // baristaOOS.writeObject(order);
+                order = (Order) baristaOIS.readObject();
+                // int orderId = baristaOIS.readInt();
 
-            // baristaOOS.writeObject(order);
-            order = (Order) baristaOIS.readObject();
-            // int orderId = baristaOIS.readInt();
+                int orderId = order.getOrderId();
 
-            int orderId = order.getOrderId();
+                // update order status
+                try {
+                    OrderItemManager orderItemManager = new OrderItemManager();
+                    orderItemManager.updateOrderStatus(order);
 
-            // System.out.println("\n\tOrder object received from Barista.\n");
-            System.out.println("\n\tOrder " + orderId + " get from Barista.\n");
+                    System.out.println("\n\tOrder " + orderId + " update succeed.\n");
 
-            // baristaSocket.close();
-            // baristaGetterSocket.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-            // baristaSocket.close();
-                    }
+                // System.out.println("\n\tOrder object received from Barista.\n");
+                // System.out.println("\n\tOrder " + orderId + " get from Barista.\n");
+
+                // baristaSocket.close();
+                // baristaGetterSocket.close();
+
+                // baristaSocket.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }   
-    
+    }
+
 }
