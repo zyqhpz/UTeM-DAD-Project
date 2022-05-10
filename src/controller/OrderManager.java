@@ -76,7 +76,8 @@ public class OrderManager {
         List<Order> orders = new ArrayList<Order>();
 
         ResultSet rs = pstmt.executeQuery();
-        while (rs.next()) {
+        // if rs is not null, then there are some orders in the database
+        while (rs != null && rs.next()) {
             Order order = new Order();
             System.out.println("Order Id: " + rs.getInt("OrderId"));
             order.setOrderId(rs.getInt("OrderId"));
