@@ -76,7 +76,6 @@ public class PreparationCounterMainMenu implements Runnable {
                             break;
                         else {
                             // Print stickers
-                            // clearScreen();
                             ClearScreen.ClearConsole();
                             Order updatedOrder = preparationCounterView.printSticker(optionToViewDetails);
 

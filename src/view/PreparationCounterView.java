@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import app.client.thread.ClearScreen;
 import controller.OrderItemManager;
 import controller.OrderManager;
 import controller.database.Database;
@@ -22,6 +23,7 @@ public class PreparationCounterView {
 	// Main Screen
 	public int mainScreen() {
 
+		ClearScreen.ClearConsole();
 		System.out.println("\t--- Preparation Counter ---\n");
 		System.out.println("\t1. View pending orders\n");
 		System.out.println("\tEnter choice: ");

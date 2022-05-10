@@ -37,7 +37,7 @@ public class PreparationCounterController implements Runnable {
                     OrderItemManager orderItemManager = new OrderItemManager();
                     orderItemManager.updateOrderStatus(order);
 
-                    System.out.println("\n\tOrder " + orderId + " update succeed.\n");
+                    System.out.println("\n\tOrderId: " + orderId + ". Order status updated.\n");
 
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -69,7 +69,7 @@ public class OrderManager {
         db = new Database();
         conn = db.doConnection();
 
-        String sql = "SELECT * FROM `order` JOIN OrderItem ON OrderItem.Order = `order`.OrderId WHERE OrderItem.OrderStatus = 'Processing' GROUP BY `order`.OrderId";
+        String sql = "SELECT * FROM `order` JOIN orderitem ON orderitem.Order = `order`.OrderId WHERE orderitem.OrderStatus = 'Processing' GROUP BY `order`.OrderId";
 
         PreparedStatement pstmt = conn.prepareStatement(sql);
 

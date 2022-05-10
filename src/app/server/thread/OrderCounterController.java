@@ -42,14 +42,12 @@ public class OrderCounterController implements Runnable {
                 // TODO: insert order into database
                 orderManager = new OrderManager(order);
 
-                System.out.println("\n\tReceive an Order object from Cashier.\n");
+                System.out.println("\n\tReceive new order from Order Counter\n");
 
                 orders = null;
                 orders = orderManager.loadData();
 
-                System.out.println("\n\tOrder added to the list. Now " + orders.size() + "\n");
-
-                System.out.println("\n\tWaiting for next request\n");
+                System.out.println("\n\tCurrent order in Processing: " + orders.size() + "\n");
 
                 if (orders != null) {
                     try {
@@ -60,7 +58,7 @@ public class OrderCounterController implements Runnable {
                         // send orders to barista
                         baristaOOS.writeObject(orders);
 
-                        System.out.println("\n\tOrder object sent to Barista.\n");
+                        System.out.println("\n\tOrder list has been sent to Preparation Counter\n");
 
                     } catch (Exception e) {
                         System.out.println("\n\tError: " + e.getMessage() + "\n");
@@ -71,6 +69,8 @@ public class OrderCounterController implements Runnable {
             } catch (Exception e) {
                 System.out.println("\n\tError: " + e.getMessage() + "\n");
             }
+
+            System.out.println("\n\tWaiting for next request\n");
         }
     }
 }

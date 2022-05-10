@@ -46,7 +46,7 @@ public class OrderServerApp {
             baristaServerSocket = new ServerSocket(8088);
             baristaGetterServerSocket = new ServerSocket(8085);
 
-            System.out.println("\tWaiting for request upcoming request\n");
+            System.out.println("\tWaiting for upcoming request\n");
 
             try {
                 Socket cashierSocket = cashierServerSocket.accept();
@@ -56,7 +56,7 @@ public class OrderServerApp {
 
                 oos.writeObject(itemProducts);
 
-                System.out.println("\tItemProducts sent to Order Counter\n");
+                System.out.println("\tItemProducts list sent to Order Counter\n");
 
             } catch (Exception e) {
                 System.out.println("\tItemProducts failed to send to Order Counter\n");
