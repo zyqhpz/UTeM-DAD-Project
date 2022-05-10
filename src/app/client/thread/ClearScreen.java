@@ -1,4 +1,4 @@
-package app.client.test;
+package app.client.thread;
 
 public class ClearScreen {
     public static void main(String[] args) {

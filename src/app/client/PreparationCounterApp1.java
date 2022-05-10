@@ -9,15 +9,15 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+// import java.rmi.registry.LocateRegistry;
+// import java.rmi.registry.Registry;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import app.client.thread.BaristaGetter;
+import app.client.thread.PreparationCounterGetter;
 
 import java.io.IOException;
 
@@ -32,12 +32,12 @@ import model.*;
  * @author haziqhapiz
  */
 
-public class HornettTeaOrderBarista {
+public class PreparationCounterApp1 {
     public static void main(String args[]) throws ClassNotFoundException, Exception {
 
-        System.out.println("\n\nStarting HornettTeaOrderBaristaApp..\n");
+        System.out.println("\n\nStarting PreparationCounterApp..\n");
 
-        Order order;
+        Order order = null;
 
         ServerSocket serverSocket = null;
 
@@ -52,16 +52,25 @@ public class HornettTeaOrderBarista {
             int send = 0;
 
             int portNo = 8088;
-            serverSocket = new ServerSocket(portNo);
+            // serverSocket = new ServerSocket(portNo);
+            Socket baristaSocket = new Socket(serverAddress, portNo);
+            Socket baristaToServerSocket = new Socket(serverAddress, 8085);
+            // Socket baristaSocket = serverSocket.accept();
             // InetAddress serverAddress = InetAddress.getLocalHost();
 
-            Runnable baristaGetter = null;
+            Runnable preparationCounterGetter = null;
             Thread baristaThread = null;
 
-            baristaGetter = new BaristaGetter(serverSocket);
-            baristaThread = new Thread(baristaGetter);
+            preparationCounterGetter = new PreparationCounterGetter(serverSocket, baristaSocket, baristaToServerSocket);
+            baristaThread = new Thread(preparationCounterGetter);
 
             baristaThread.start();
+
+            // Runnable displayList = new DisplayListTest(serverSocket, order,
+            // baristaSocket);
+            // Thread thread = new Thread(displayList);
+
+            // thread.start();
 
             // ObjectInputStream ois = null;
 

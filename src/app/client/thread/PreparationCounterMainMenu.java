@@ -1,4 +1,4 @@
-package app.client.test;
+package app.client.thread;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -58,26 +58,13 @@ public class PreparationCounterMainMenu implements Runnable {
 
                 if (optionToViewPending == 1) {
 
-                    // Create a multithread to always receive new list of
-                    // pending orders from server
-                    // Socket socket = new Socket(serverAddress, serverPortNo);
-                    // InputStream is = socket.getInputStream();
-                    // ObjectInputStream ois = new ObjectInputStream(is);
                     do {
                         // Display latest list of pending orders
-                        // clearScreen();
                         ClearScreen.ClearConsole();
                         System.out.println("\n\t--- Pending Orders ---\n"
                                 + "\tOrder Number\t\t\tQuantity");
-                        // while (ois.available() > 0) {
 
-                        // order = (Order) ois.readObject();
-                        // preparationCounterView.displayOrders(order);
                         preparationCounterView.displayOrders(orders);
-
-                        // System.out.println("\t" + order.getOrderNumber() +
-                        // "\t\t\t" + order.getTotalOrderItem());
-                        // }
 
                         // 3. Select Order Number to view order details
                         System.out.println("\n\tEnter Order Number or "
@@ -106,19 +93,13 @@ public class PreparationCounterMainMenu implements Runnable {
 
                                 // 5. Set order item status to "Ready"
                                 // 6. Send Order object to server
-                                // Socket socket = new Socket(serverAddress, serverPortNo);
-                                // OutputStream outStream = socket.getOutputStream();
-                                // ObjectOutputStream oos = new ObjectOutputStream(outStream);
-                                // oos.writeObject(updatedOrder);
-
-                                // InetAddress serverAddress = InetAddress.getLocalHost();
 
                                 // remove updated order from list
                                 orders.remove(updatedOrder);
 
                                 socket = new Socket(serverAddress, 8085);
 
-                                // order.setOrderId(2);
+                                // 6. Send Order object to server
                                 OutputStream outStream = socket.getOutputStream();
                                 ObjectOutputStream oos = new ObjectOutputStream(outStream);
                                 oos.writeObject(updatedOrder);
@@ -131,7 +112,6 @@ public class PreparationCounterMainMenu implements Runnable {
                                 oos.close();
 
                                 // 7. Redirect to main menu
-                                // clearScreen();
                                 ClearScreen.ClearConsole();
                                 break;
 
@@ -191,14 +171,4 @@ public class PreparationCounterMainMenu implements Runnable {
                 break;
         }
     }
-
-    public static void clearScreen() {
-        try {
-            // new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            new ProcessBuilder("clear").inheritIO().start().waitFor();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
 }

@@ -1,82 +1,58 @@
 package app.client;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Scanner;
 
-import model.Order;
-import model.OrderItem;
-import view.PreparationCounterView;
+import app.client.thread.PreparationCounterGetter;
+import model.*;
 
 /**
- * This class
+ * This class represent the client (Preparation Counter) app for
+ * HornettTeaOrderServerApp
  * 
- * @author WongKakLok
- *
+ * Function: to start the client-side program for the application
+ * 
+ * @author haziqhapiz
  */
 
 public class PreparationCounterApp {
+	public static void main(String args[]) throws ClassNotFoundException, Exception {
 
-	public static void main(String[] args) {
+		System.out.println("\n\nStarting PreparationCounterApp..\n");
+
+		Order order = null;
+
+		ServerSocket serverSocket = null;
+
+		Scanner sc = new Scanner(System.in);
 
 		try {
-
-			System.out.println("\tExecuting PreparationCounterApp");
 
 			// Server information
 			int serverPortNo = 8088;
 			InetAddress serverAddress = InetAddress.getLocalHost();
 
-			// Connect to the remote machine
-			Socket socket = new Socket(serverAddress, serverPortNo);
+			int send = 0;
 
-			// Create stream to send request
-			OutputStream os = socket.getOutputStream();
-			DataOutputStream dos = new DataOutputStream(os);
+			int portNo = 8088;
+			Socket baristaSocket = new Socket(serverAddress, portNo);
+			Socket baristaToServerSocket = new Socket(serverAddress, 8085);
 
-			// Send request to the server
-			String orderStatus = "Processing";
-			dos.writeUTF(orderStatus);
+			Runnable preparationCounterGetter = null;
+			Thread preparationCounterThread = null;
 
-			// Create stream to receive respond from server
-			InputStream is = socket.getInputStream();
-			ObjectInputStream ois = new ObjectInputStream(is);
+			preparationCounterGetter = new PreparationCounterGetter(serverSocket, baristaSocket, baristaToServerSocket);
+			preparationCounterThread = new Thread(preparationCounterGetter);
 
-			// Create objects
-			Order order = new Order();
-			OrderItem orderItem = new OrderItem();
-			PreparationCounterView preparationCounterView = new PreparationCounterView();
+			preparationCounterThread.start();
 
-			// Receive latest order from the server
-			while (ois.available() > 0) {
+		} catch (
 
-				order = (Order) ois.readObject();
-				preparationCounterView.displayOrders(order);
-
-				OutputStream OrderItemos = socket.getOutputStream();
-				DataOutputStream OrderItemdos = new DataOutputStream(OrderItemos);
-
-				OrderItemdos.writeInt(order.getOrderId());
-
-				InputStream OrderItemis = socket.getInputStream();
-				ObjectInputStream OrderItemois = new ObjectInputStream(OrderItemis);
-
-				System.out.println("Details: \n");
-				while (OrderItemois.available() > 0) {
-					orderItem = (OrderItem) OrderItemois.readObject();
-
-				}
-
-			}
-
-		} catch (Exception e) {
+		Exception e) {
 
 			e.printStackTrace();
 		}
-
 	}
 }

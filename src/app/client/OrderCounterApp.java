@@ -1,4 +1,4 @@
-package app.client.test;
+package app.client;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -14,17 +14,18 @@ import java.util.Scanner;
 import model.*;
 
 /**
- * This class represent the client (cashier) app for HornettTeaOrderServerApp
+ * This class represent the client (Order Counter) app for
+ * HornettTeaOrderServerApp
  * 
  * Function: to start the client-side program for the application
  * 
- * @author haziqhapiz
+ * @author DaysonTai
  */
 
-public class CashierAppTest {
+public class OrderCounterApp {
     public static void main(String args[]) {
 
-        System.out.println("\n\nStarting HornettTeaOrderCashierApp..\n");
+        System.out.println("\n\nStarting OrderCashierApp..\n");
 
         Order order;
         Socket socket;
@@ -67,7 +68,7 @@ public class CashierAppTest {
                 is.close();
                 socket.close();
 
-                System.out.println("\n\t ItemProducts received \n");
+                System.out.println("\n\t ItemProducts fetched from server \n");
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -83,7 +84,6 @@ public class CashierAppTest {
                 send = sc.nextInt();
 
                 if (send == 1) {
-                    // Socket socket = new Socket(serverAddress, serverPortNo);
                     socket = new Socket(serverAddress, serverPortNo);
 
                     order = loadOrder();
@@ -92,10 +92,8 @@ public class CashierAppTest {
                     ObjectOutputStream oos = new ObjectOutputStream(outStream);
                     oos.writeObject(order);
 
-                    System.out.println("\n\tSending Order to server\n");
+                    System.out.println("\n\tSending new order to server\n");
                     socket.close();
-
-                    // sc.close();
                 }
 
                 else
