@@ -69,8 +69,6 @@ public class PreparationCounterApp {
 				while (OrderItemois.available() > 0) {
 					orderItem = (OrderItem) OrderItemois.readObject();
 
-					// Process the respond
-
 				}
 
 			}

@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import controller.database.Database;
 import model.Order;
 import model.OrderItem;
@@ -74,5 +73,5 @@ public class OrderItemManager {
 		conn.close();
 
 		return orderItems;
-	}
+  }
 }

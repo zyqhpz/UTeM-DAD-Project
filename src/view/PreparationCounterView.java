@@ -49,12 +49,6 @@ public class PreparationCounterView {
 			System.out.println("\t" + order.getOrderNumber() + "\t\t\t\t"
 					+ order.getTotalOrderItem());
 		}
-
-		// orderList.add(order);
-
-		// System.out.println("\t" + order.getOrderNumber() + "\t\t\t\t"
-		// + order.getTotalOrderItem());
-
 	}
 
 	public Order printSticker(int orderNumberByUser) {
@@ -107,7 +101,7 @@ public class PreparationCounterView {
 
 		if (orderExist == false)
 			System.out.println("\tInvalid Order Number.\n");
-
+    
 		return null;
 	}
 }
