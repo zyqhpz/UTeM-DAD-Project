@@ -19,50 +19,11 @@ public class OrderManager {
     private Database db;
     private Connection conn;
 
+    public OrderManager() {
+    }
+
     public OrderManager(Order order) {
         this.order = order;
-    }
-
-    // insert data into database
-    public void orderProcessor() throws ClassNotFoundException, SQLException {
-
-        // connect to database
-        Database database = new Database();
-        Connection conn = database.doConnection();
-
-        List<OrderItem> orderItems = order.getOrderItems();
-
-        for (OrderItem orderItem : orderItems) {
-            int itemProductId = orderItem.getItemProduct().getItemProductId();
-            int quantity = orderItem.getQuantity();
-            double price = orderItem.getItemProduct().getPrice();
-            double subTotalAmount = orderItem.getSubTotalAmount();
-        }
-    }
-
-    public void displayData() {
-        System.out.println("Order Id: " + order.getOrderId());
-        System.out.println("Order Number: " + order.getOrderNumber());
-        System.out.println("TransactionDate: " + order.getTransactionDate());
-        System.out.println("Total Order Item: " + order.getTotalOrderItem());
-        System.out.println("Sub Total: " + order.getSubTotal());
-        System.out.println("Service Tax: " + order.getServiceTax());
-        System.out.println("Rounding: " + order.getRounding());
-        System.out.println("Grand Total: " + order.getGrandTotal());
-        System.out.println("Tendered Cash: " + order.getTenderedCash());
-        System.out.println("Change: " + order.getChange());
-
-        List<OrderItem> orderItems = order.getOrderItems();
-
-        for (OrderItem orderItem : orderItems) {
-            System.out.println("Order Item Id: " + orderItem.getOrderItemId());
-            System.out.println("Item Product Id: " + orderItem.getItemProduct().getItemProductId());
-            System.out.println("Quantity: " + orderItem.getQuantity());
-            System.out.println("Sub Total Amount: " + orderItem.getSubTotalAmount());
-            System.out.println("Sequence Number: " + orderItem.getSequenceNumber());
-            System.out.println("Order Status: " + orderItem.getOrderStatus());
-            System.out.println("Ready Time: " + orderItem.getReadyTime());
-        }
     }
 
     public List<Order> loadData() throws ClassNotFoundException, SQLException {
@@ -100,6 +61,9 @@ public class OrderManager {
             orders.add(order);
         }
 
+        // close the connection
+        conn.close();
+
         return orders;
     }
 
@@ -107,18 +71,21 @@ public class OrderManager {
      * Insert Order data into database
      * 
      */
-    public void insertData() throws ClassNotFoundException, SQLException {
+    // public void insertData() throws ClassNotFoundException, SQLException {
+    // db = new Database();
+    // conn = db.doConnection();
+
+    // OrderItem orderItem = new OrderItem();
+
+    // insertDataOrder();
+
+    // conn.close();
+    // }
+
+    public void insertDataOrder(Order order) throws SQLException, ClassNotFoundException {
+
         db = new Database();
         conn = db.doConnection();
-
-        OrderItem orderItem = new OrderItem();
-
-        insertDataOrder();
-
-        conn.close();
-    }
-
-    public void insertDataOrder() throws SQLException {
 
         // prepare statement
         int orderId;
@@ -132,12 +99,11 @@ public class OrderManager {
         double tenderedCash;
         double change;
 
-        String sql = "INSERT INTO order (orderId, orderNumber, transactionDate, totalOrderItem, subTotal, serviceTax, rounding, grandTotal, tenderedCash, change) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO `order` (OrderNumber, TransactionDate, TotalOrderItem, SubTotal, ServiceTax, Rounding, GrandTotal, TenderedCash, `Change`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement pstmt = conn.prepareStatement(sql);
+        PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
         // set the values
-        orderId = order.getOrderId();
         orderNumber = order.getOrderNumber();
         transactionDate = order.getTransactionDate();
         totalOrderItem = order.getTotalOrderItem();
@@ -148,62 +114,77 @@ public class OrderManager {
         tenderedCash = order.getTenderedCash();
         change = order.getChange();
 
-        java.sql.Date sqlTransactionDate = new java.sql.Date(transactionDate.getTime());
+        // java.util.Date date = new java.util.Date();
+        // java.sql.Timestamp transactionDate = new java.sql.Timestamp(date.getTime());
 
-        pstmt.setInt(1, orderId);
-        pstmt.setInt(2, orderNumber);
-        // pstmt.setDate(3, transactionDate);
-        pstmt.setDate(3, sqlTransactionDate);
-        pstmt.setInt(4, totalOrderItem);
-        pstmt.setDouble(5, subTotal);
-        pstmt.setDouble(6, serviceTax);
-        pstmt.setDouble(7, rounding);
-        pstmt.setDouble(8, grandTotal);
-        pstmt.setDouble(9, tenderedCash);
-        pstmt.setDouble(10, change);
+        // convert transactionDate to sql.Date
+        java.sql.Date sqlDate = new java.sql.Date(transactionDate.getTime());
+
+        pstmt.setInt(1, orderNumber);
+        pstmt.setDate(2, sqlDate);
+        pstmt.setInt(3, totalOrderItem);
+        pstmt.setDouble(4, subTotal);
+        pstmt.setDouble(5, serviceTax);
+        pstmt.setDouble(6, rounding);
+        pstmt.setDouble(7, grandTotal);
+        pstmt.setDouble(8, tenderedCash);
+        pstmt.setDouble(9, change);
 
         // execute the statement
         pstmt.executeUpdate();
 
+        // get the generated key
+        ResultSet rs = pstmt.getGeneratedKeys();
+        if (rs.next()) {
+            orderId = rs.getInt(1);
+            order.setOrderId(orderId);
+        }
+
         // close the connection
         pstmt.close();
+        conn.close();
+
+        // insert order item
+        insertDataOrderItem(order);
     }
 
-    public void insertDataOrderItem() throws ClassNotFoundException, SQLException {
+    public void insertDataOrderItem(Order order) throws ClassNotFoundException, SQLException {
         List<OrderItem> orderItems = order.getOrderItems();
 
+        // Order order = new Order();
+
+        // order.setOrderItems(orderItems);
+
+        db = new Database();
+        conn = db.doConnection();
+
         for (OrderItem orderItem : orderItems) {
-            int orderItemId;
             int itemProductId;
             int quantity;
             double subTotalAmount;
-            int sequenceNumber;
             // String orderStatus;
             // Date readyTime;
 
-            String sql = "INSERT INTO orderItem (orderItemId, orderId, itemProductId, quantity, subTotalAmount, sequenceNumber) VALUES (?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO orderItem (ItemProduct, `Order`, Quantity, SubTotalAmount) VALUES (?, ?, ?, ?)";
 
             PreparedStatement pstmt = conn.prepareStatement(sql);
 
             // set the values
-            orderItemId = orderItem.getOrderItemId();
             itemProductId = orderItem.getItemProduct().getItemProductId();
             quantity = orderItem.getQuantity();
             subTotalAmount = orderItem.getSubTotalAmount();
-            sequenceNumber = orderItem.getSequenceNumber();
 
-            pstmt.setInt(1, orderItemId);
+            pstmt.setInt(1, itemProductId);
             pstmt.setInt(2, order.getOrderId());
-            pstmt.setInt(3, itemProductId);
-            pstmt.setInt(4, quantity);
-            pstmt.setDouble(5, subTotalAmount);
-            pstmt.setInt(6, sequenceNumber);
+            pstmt.setInt(3, quantity);
+            pstmt.setDouble(4, subTotalAmount);
 
             // execute the statement
             pstmt.executeUpdate();
 
             // close the connection
             pstmt.close();
+            conn.close();
         }
     }
 

@@ -6,12 +6,14 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
+import app.client.thread.ClearScreen;
 import model.*;
 
 import view.OrderCounterView;
@@ -26,7 +28,6 @@ import view.OrderCounterView;
 
 public class OrderCounterAppTest {
 
-    private static OrderCounterView orderCounterView;
     private static int orderNumber = 1;
 
     public static void main(String args[]) {
@@ -41,96 +42,9 @@ public class OrderCounterAppTest {
 
         List<ItemProduct> itemProducts = new ArrayList<ItemProduct>();
         List<OrderItem> orderItems = new ArrayList<OrderItem>();
-
-        // This array contains Objects of the item product
-        ItemProduct[] menuList = new ItemProduct[30];
-
-        Integer[] idList = {
-                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-                20, 21
-        };
-
-        String[] nameList = {
-                "(Cold) Signature Brown Sugar Pearl Milk Tea",
-                "(Hot) Signature Brown Sugar Pearl Milk Tea",
-                "(Cold) Original Pearl Milk Tea",
-                "(Hot) Original Pearl Milk Tea",
-                "(Cold) Black Diamond Milk Tea",
-                "(Cold) Red Bean Pearl Milk Tea",
-                "(Hot) Red Bean Pearl Milk Tea",
-                "(Cold) Earl Grey Milk Tea",
-                "(Hot) Earl Grey Milk Tea",
-                "(Cold) Signature Milk Tea",
-                "(Hot) Signature Milk Tea",
-                "(Cold) Original Milk Tea",
-                "(Hot) Original Milk Tea",
-                "(Cold) Signature Coffee",
-                "(Hot) Signature Coffee",
-                "(Cold) Coco Mocha",
-                "(Hot) Coco Mocha",
-                "(Cold) Hazelnut Latte",
-                "(Hot) Hazelnut Latte",
-                "(Cold) Americano",
-                "(Hot) Americano"
-        };
-
-        String[] labelNameList = {
-                "(Cold) Sig BrSg Prl",
-                "(Hot) Sig BrSg Prl",
-                "(Cold) Pearl Mlk",
-                "(Hot) Pearl Mlk",
-                "(Cold) Blk Dmd Mlk",
-                "(Hot) Blk Dmd Mlk",
-                "(Hot) Red Bn Prl Mlk",
-                "(Cold) Erl Gry Mlk",
-                "(Hot) Erl Gry Mlk",
-                "(Cold) Sig Mlk",
-                "(Hot) Sig Mlk",
-                "(Cold) Org Mlk",
-                "(Hot) Org Mlk",
-                "(Cold) Sig Coff",
-                "(Hot) Sig Coff",
-                "(Cold) Coco Mocha",
-                "(Hot) Coco Mocha",
-                "(Cold) Hznut Latte",
-                "(Hot) Hznut Latte",
-                "(Cold) Americano",
-                "(Hot) Americano"
-        };
-
-        Double[] priceList = {
-                6.50,
-                7.45,
-                6.50,
-                7.45,
-                7.50,
-                7.45,
-                8.35,
-                6.50,
-                7.45,
-                5.55,
-                6.50,
-                5.55,
-                6.50,
-                8.35,
-                8.35,
-                8.35,
-                8.35,
-                8.35,
-                8.35,
-                7.45,
-                7.45
-        };
-
-        // Fill the array with item objects
-        // for (int i = 0; i < 21; i++) {
-        // menuList[i] = new ItemProduct(i + 1, nameList[i], labelNameList[i],
-        // priceList[i]);
-
-        // }
+        OrderCounterView orderCounterView = new OrderCounterView();
 
         try {
-
             // Server information
             int serverPortNo = 8087;
             InetAddress serverAddress = InetAddress.getLocalHost();
@@ -175,6 +89,7 @@ public class OrderCounterAppTest {
             // Page for making a new order
             do {
                 order = new Order();
+                order = null;
                 int totalOrderItem = 0;
                 double subTotal = 0;
 
@@ -183,12 +98,12 @@ public class OrderCounterAppTest {
                 // Ordering specific items
                 do {
                     // clear screen
-                    new ProcessBuilder("cmd", "/c", "cls").inheritIO()
-                            .start().waitFor();
+                    // new ProcessBuilder("cmd", "/c", "cls").inheritIO()
+                    // .start().waitFor();
 
                     // 1. Display menu of all beverages
                     // orderCounterView.displayOrderList(menuList);
-                    orderCounterView.displayItemProductLst(itemProducts);
+                    orderCounterView.displayItemProducts(itemProducts);
 
                     // 2. Select menu and quantity
                     System.out.println("\n\t Enter 0 to complete this order");
@@ -201,7 +116,17 @@ public class OrderCounterAppTest {
                         System.out.print("\t Quantity: ");
                         int quantity = sc.nextInt();
                         totalOrderItem = totalOrderItem + quantity;
-                        double itemPrice = priceList[choice - 1];
+
+                        ItemProduct itemProduct = null;
+
+                        for (ItemProduct product : itemProducts) {
+                            if (product.getItemProductId() == choice) {
+                                itemProduct = product;
+                                break;
+                            }
+                        }
+
+                        double itemPrice = itemProduct.getPrice();
                         subTotal = subTotal + quantity * itemPrice;
 
                         // get time
@@ -213,13 +138,10 @@ public class OrderCounterAppTest {
                         Calendar readyTime = Calendar.getInstance();
                         readyTime.add(Calendar.MINUTE, 5);
 
-                        // Get ItemProduct where itemProductId = choice
-
-                        ItemProduct itemProduct = itemProducts.get(choice - 1);
-
                         // 3. Store in ArrayList
                         OrderItem orderItem = new OrderItem();
-                        orderItem.setItemProduct(menuList[choice - 1]);
+                        // orderItem.setItemProduct(menuList[choice - 1]);
+                        orderItem.setItemProduct(itemProduct);
                         orderItem.setOrderItemId(orderNumber);
                         orderItem.setOrderStatus("Processing");
                         orderItem.setQuantity(quantity);
@@ -238,7 +160,10 @@ public class OrderCounterAppTest {
                     calendar.set(2022, 5, 7, 20, 1, 1);
 
                     int orderId = 2000 + orderNumber;
-                    Date transactionDate = calendar.getTime();
+                    // Date transactionDate = calendar.getTime();
+
+                    java.util.Date date = new java.util.Date();
+                    Timestamp transactionDate = new Timestamp(date.getTime());
                     // List<OrderItem> orderItems;
                     // double serviceTax = 0.05;
                     // double rounding = 0;
@@ -246,6 +171,7 @@ public class OrderCounterAppTest {
                     // double tenderedCash = 20;
                     // double change = 9.95;
 
+                    // FIX THIS !!
                     double serviceTax = 0.05;
                     double rounding = 0;
                     double grandTotal = 10.05;
@@ -264,8 +190,7 @@ public class OrderCounterAppTest {
                     // display the confirmation page
                     if (choice == 0) {
                         // clear screen
-                        new ProcessBuilder("cmd", "/c", "cls").inheritIO()
-                                .start().waitFor();
+                        ClearScreen.ClearConsole();
 
                         // display confirmation page
                         orderCounterView.confirmationPage(order);
@@ -277,12 +202,14 @@ public class OrderCounterAppTest {
                             System.out.print("\n\tTendered cash: ");
                             tenderedCash = sc.nextDouble();
 
+                            order.setTenderedCash(tenderedCash);
+
                             orderCounterView.displayReceipt(order);
                         }
 
                         // Go back to menu
                         else if (payChoice == 2) {
-                            orderCounterView.displayOrderList(menuList);
+                            continue;
                         }
                     }
 

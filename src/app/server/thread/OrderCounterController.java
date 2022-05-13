@@ -16,7 +16,7 @@ public class OrderCounterController implements Runnable {
     private ServerSocket cashierServerSocket = null;
     private Socket baristaSocket = null;
     private Order order;
-    private OrderManager orderManager;
+    private OrderManager orderManager = new OrderManager();
     private List<Order> orders = new ArrayList<Order>();
 
     public OrderCounterController(ServerSocket cashierServerSocket,
@@ -40,7 +40,9 @@ public class OrderCounterController implements Runnable {
                 order = (Order) ois.readObject();
 
                 // TODO: insert order into database
-                orderManager = new OrderManager(order);
+                // orderManager = new OrderManager(order);
+
+                orderManager.insertDataOrder(order);
 
                 System.out.println("\n\tReceive new order from Order Counter\n");
 
