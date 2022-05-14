@@ -1,8 +1,10 @@
 package view;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Scanner;
 
@@ -53,7 +55,7 @@ public class PreparationCounterView {
 	
 	public Order printSticker(int userRespond) throws ParseException {
 		
-		int orderNumber;
+		int orderNumber, itemQuantity;
 		List<OrderItem> orderItem;
 		boolean orderExist = false;
 		
@@ -66,22 +68,30 @@ public class PreparationCounterView {
 				
 				for(OrderItem orderItems : orderItem)
 				{
-			        long datetime =System.currentTimeMillis();  
-			        Date now = new java.sql.Timestamp(datetime);  
-			        orderItems.setReadyTime(now);
+			        //long datetime =System.currentTimeMillis();  
+			        //Date now = new java.sql.Timestamp(datetime); 
+			        //orderItems.setReadyTime(now);
+
+					Date transactionTime = orderLists.getTransactionDate();
+					String transactiontime = new SimpleDateFormat
+							("MM/dd/yyyy HH:mm:ss").format(transactionTime);
 					
-					System.out.println("\n\t----------------------------------" 
-							+ "----------------");
-					System.out.println("\tHornettTea FTMK UTeM");
-					System.out.println("\tOrder Number: " + orderNumber);
-					System.out.println("\tDate: " + orderItems.getReadyTime() 
-							+ "\n");
-					System.out.println("\tName: \n\t" + 
-							orderItems.getItemProduct().getName() + "\n");
-					System.out.println("\tSequence: " + 
-							orderItems.getSequenceNumber());
-					System.out.println("\t----------------------------------" 
-							+ "----------------\n");
+					itemQuantity = orderItems.getQuantity();
+					
+					for(int counter = 0; counter < itemQuantity; counter++)
+					{
+						System.out.println("\n\t------------------------------"
+								+ "--------------------");
+						System.out.println("\tHornettTea FTMK UTeM");
+						System.out.println("\tOrder Number: " + orderNumber);
+						System.out.println("\tDate: " + transactiontime + "\n");
+						System.out.println("\tName: \n\t" + 
+								orderItems.getItemProduct().getName() + "\n");
+						System.out.println("\tSequence: " + 
+								(counter+1) + "/" + itemQuantity);
+						System.out.println("\t--------------------------------"
+								+ "------------------\n");
+					}
 					
 					orderItems.setOrderStatus("Ready");
 				}

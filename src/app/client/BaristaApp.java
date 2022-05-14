@@ -101,6 +101,8 @@ public class BaristaApp {
 						+ "\tOrder Number\t\t\tQuantity");
 						// while (ois.available() > 0) {
 
+						
+						List<Order> orders = new ArrayList<Order>();
 						/*
 						Object obj = ois.readObject();
 	                    // Check it's an ArrayList
@@ -116,9 +118,17 @@ public class BaristaApp {
 	                                    // Here we go!
 	                                    Order v = (Order) o;
 	                                    orders.add(v);
+	                                    
 	                                    // use v.
-						*/				
-						List<Order> orders = new ArrayList<Order>();
+	                                   
+	                                }
+	                            }
+	                        }
+	                    }
+	                    */
+	                   // preparationCounterView.displayOrders(orders);
+						/*
+	                   List<Order> orders = new ArrayList<Order>();
 
 						Object order = ois.readObject();
 	                    if (order instanceof ArrayList<?>) {
@@ -134,10 +144,12 @@ public class BaristaApp {
 	                            }
 	                        }
                  		}
+                 		
+                 */
 			
-						//Order order = (Order) ois.readObject();
-	                    //orders.add(order);
-						//preparationCounterView.displayOrders(orders);
+						Order order = (Order) ois.readObject();
+	                    orders.add(order);
+						preparationCounterView.displayOrders(orders);
 						// System.out.println("\t" + order.getOrderNumber() +
 						// "\t\t\t" + order.getTotalOrderItem());
 						// }
