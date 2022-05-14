@@ -26,7 +26,7 @@ import view.OrderCounterView;
  * @author DaysonTai
  */
 
-public class OrderCounterAppTest {
+public class OrderCounterApp {
 
     private static int orderNumber = 1;
 
