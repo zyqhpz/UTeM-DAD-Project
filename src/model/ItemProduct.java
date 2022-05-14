@@ -8,6 +8,18 @@ public class ItemProduct implements Serializable {
     private String name;
     private String labelName;
     private double price;
+    
+    public ItemProduct() {
+    	
+    }
+    
+    public ItemProduct(int itemProductId, String name, String labelName, 
+    		double price) {
+    	this.itemProductId = itemProductId;
+    	this.name = name;
+    	this.labelName = labelName;
+    	this.price = price;
+    }
 
     public int getItemProductId() {
         return itemProductId;
