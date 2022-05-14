@@ -1,22 +1,17 @@
 package view;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
 import app.client.thread.ClearScreen;
-import controller.OrderItemManager;
-import controller.OrderManager;
-import controller.database.Database;
 import model.Order;
 import model.OrderItem;
 
 public class PreparationCounterView {
 
-	// private List<Order> orderList = new ArrayList<Order>();
 	private List<Order> orders = new ArrayList<Order>();
 	Scanner sc = new Scanner(System.in);
 
@@ -30,16 +25,6 @@ public class PreparationCounterView {
 		System.out.print("\t>> ");
 
 		return sc.nextInt();
-	}
-
-	// This method displays the latest order details at the preparation counter
-	public void displayOrders(Order order) {
-
-		orders.add(order);
-
-		System.out.println("\t" + order.getOrderNumber() + "\t\t\t\t" +
-				order.getTotalOrderItem());
-
 	}
 
 	// This method displays the latest order details at the preparation counter
@@ -64,36 +49,27 @@ public class PreparationCounterView {
 				orderNumber = order.getOrderNumber();
 				orderItem = order.getOrderItems();
 
-				Date date = new Date();
-				date = order.getTransactionDate();
+				Date date = order.getTransactionDate();
+				String transactionDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(date);
 
 				for (OrderItem orderItems : orderItem) {
-					System.out.println("\n\t----------------------------------"
-							+ "----------------");
-					System.out.println("\tHornettTea FTMK UTeM");
-					System.out.println("\tOrder Number: " + orderNumber);
-					System.out.println("\tDate: " + date + "\n");
-					System.out.println("\tName: \n\t" +
-							orderItems.getItemProduct().getName() + "\n");
-					System.out.println("\tSequence: " +
-							orderItems.getSequenceNumber());
-					System.out.println("\t----------------------------------"
-							+ "----------------\n");
+					int itemQuantity = orderItems.getQuantity();
 
-					// FIX : ssdont set order status to ready
+					for (int counter = 0; counter < itemQuantity; counter++) {
+						orderItems.setSequenceNumber(counter + 1);
+						System.out.println("\n\t------------------------------"
+								+ "--------------------");
+						System.out.println("\tHornettTea FTMK UTeM");
+						System.out.println("\tOrder Number: " + orderNumber);
+						System.out.println("\tDate: " + transactionDate + "\n");
+						System.out.println("\tName: \n\t" +
+								orderItems.getItemProduct().getName() + "\n");
+						System.out.println("\tSequence: " + orderItems.getSequenceNumber() + " / " + itemQuantity);
+						System.out.println("\t--------------------------------"
+								+ "------------------\n");
+					}
+
 					orderItems.setOrderStatus("Ready");
-
-					/*
-					 * OrderItemManager orderItemManager = new OrderItemManager();
-					 * try {
-					 * orderItemManager.updateOrderStatus
-					 * (orderItems.getOrderItemId());
-					 * } catch (ClassNotFoundException e) {
-					 * e.printStackTrace();
-					 * } catch (SQLException e) {
-					 * e.printStackTrace();
-					 * }
-					 */
 				}
 
 				orderExist = true;
@@ -103,7 +79,7 @@ public class PreparationCounterView {
 
 		if (orderExist == false)
 			System.out.println("\tInvalid Order Number.\n");
-    
+
 		return null;
 	}
 }

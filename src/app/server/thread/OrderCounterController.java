@@ -16,7 +16,7 @@ public class OrderCounterController implements Runnable {
     private ServerSocket cashierServerSocket = null;
     private Socket baristaSocket = null;
     private Order order;
-    private OrderManager orderManager;
+    private OrderManager orderManager = new OrderManager();
     private List<Order> orders = new ArrayList<Order>();
 
     public OrderCounterController(ServerSocket cashierServerSocket,
@@ -39,10 +39,20 @@ public class OrderCounterController implements Runnable {
                 // read Order object from cashier
                 order = (Order) ois.readObject();
 
-                // TODO: insert order into database
-                orderManager = new OrderManager(order);
-
                 System.out.println("\n\tReceive new order from Order Counter\n");
+
+                // do calculation in order
+                order = orderManager.calculateChange(order);
+
+                // return Order back to cashier
+                OutputStream os = clientSocket.getOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(os);
+                oos.writeObject(order);
+
+                System.out.println("\n\tNew order has been calculated. Return the order to Order Counter\n");
+
+                orderManager.insertDataOrder(order);
+                System.out.println("\n\tNew order has been inserted to database\n");
 
                 orders = null;
                 orders = orderManager.loadData();
