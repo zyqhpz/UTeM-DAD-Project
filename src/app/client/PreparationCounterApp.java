@@ -21,6 +21,7 @@ import view.PreparationCounterView;
 
 public class PreparationCounterApp {
 	
+	/*
 	public static void main (String[] args) {
 		
 		try {
@@ -85,4 +86,5 @@ public class PreparationCounterApp {
 		}	
 		
 	}
+	*/
 }
