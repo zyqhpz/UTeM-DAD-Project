@@ -89,20 +89,18 @@ public class OrderCounterAppTest {
             // Page for making a new order
             do {
                 order = new Order();
-                order = null;
+                orderItems.clear();
                 int totalOrderItem = 0;
                 double subTotal = 0;
+                double subTotalAmount = 0;
 
                 int choice;
 
                 // Ordering specific items
                 do {
-                    // clear screen
-                    // new ProcessBuilder("cmd", "/c", "cls").inheritIO()
-                    // .start().waitFor();
 
-                    // 1. Display menu of all beverages
-                    // orderCounterView.displayOrderList(menuList);
+                    ClearScreen.ClearConsole();
+
                     orderCounterView.displayItemProducts(itemProducts);
 
                     // 2. Select menu and quantity
@@ -127,27 +125,16 @@ public class OrderCounterAppTest {
                         }
 
                         double itemPrice = itemProduct.getPrice();
-                        subTotal = subTotal + quantity * itemPrice;
-
-                        // get time
-                        Calendar currentTime = Calendar.getInstance();
-
-                        // Calculate ready time by adding current time with 5
-                        // minutes
-
-                        Calendar readyTime = Calendar.getInstance();
-                        readyTime.add(Calendar.MINUTE, 5);
+                        subTotalAmount = quantity * itemPrice;
+                        subTotal += subTotalAmount;
 
                         // 3. Store in ArrayList
                         OrderItem orderItem = new OrderItem();
-                        // orderItem.setItemProduct(menuList[choice - 1]);
                         orderItem.setItemProduct(itemProduct);
                         orderItem.setOrderItemId(orderNumber);
                         orderItem.setOrderStatus("Processing");
                         orderItem.setQuantity(quantity);
-                        orderItem.setReadyTime(readyTime.getTime());
-                        orderItem.setSequenceNumber(orderNumber);
-                        orderItem.setSubTotalAmount(subTotal);
+                        orderItem.setSubTotalAmount(subTotalAmount);
 
                         // Add orderItem into order
                         orderItems.add(orderItem);
@@ -155,37 +142,24 @@ public class OrderCounterAppTest {
 
                     // Customer order finish
                     // 4. Add to Order object
-                    // which contains List<OrderItem> orderItems;
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(2022, 5, 7, 20, 1, 1);
 
                     int orderId = 2000 + orderNumber;
-                    // Date transactionDate = calendar.getTime();
 
                     java.util.Date date = new java.util.Date();
                     Timestamp transactionDate = new Timestamp(date.getTime());
-                    // List<OrderItem> orderItems;
-                    // double serviceTax = 0.05;
-                    // double rounding = 0;
-                    // double grandTotal = 10.05;
-                    // double tenderedCash = 20;
-                    // double change = 9.95;
 
-                    // FIX THIS !!
-                    double serviceTax = 0.05;
-                    double rounding = 0;
-                    double grandTotal = 10.05;
-                    double tenderedCash = 0;
-                    double change = 9.95;
+                    order.setSubTotal(subTotal);
+                    order.setTotalOrderItem(totalOrderItem);
+                    order.setOrderItems(orderItems);
+                    order.setOrderId(orderId);
+                    order.setTransactionDate(transactionDate);
 
-                    // order = new Order(orderId, orderNumber, transactionDate,
+                    order = calculateConfirmationOrder(order);
+
+                    // // set Order
+                    // order = setOrder(orderId, orderNumber, transactionDate,
                     // orderItems, totalOrderItem, subTotal, serviceTax,
-                    // rounding, grandTotal, tenderedCash, change);
-
-                    // set Order
-                    order = setOrder(orderId, orderNumber, transactionDate,
-                            orderItems, totalOrderItem, subTotal, serviceTax,
-                            rounding, grandTotal, tenderedCash, change);
+                    // rounding, grandTotal, change);
 
                     // display the confirmation page
                     if (choice == 0) {
@@ -200,9 +174,24 @@ public class OrderCounterAppTest {
                         // Confirm to pay
                         if (payChoice == 1) {
                             System.out.print("\n\tTendered cash: ");
-                            tenderedCash = sc.nextDouble();
+                            double tenderedCash = sc.nextDouble();
 
                             order.setTenderedCash(tenderedCash);
+
+                            // 6. Send Order object to server
+                            socket = new Socket(serverAddress, serverPortNo);
+
+                            OutputStream outStream = socket.getOutputStream();
+                            ObjectOutputStream oos = new ObjectOutputStream(outStream);
+                            oos.writeObject(order);
+                            oos.flush();
+
+                            // 7. Receive Order object from server
+                            InputStream inStream = socket.getInputStream();
+                            ObjectInputStream oiStream = new ObjectInputStream(inStream);
+
+                            order = (Order) oiStream.readObject();
+                            socket.close();
 
                             orderCounterView.displayReceipt(order);
                         }
@@ -219,15 +208,6 @@ public class OrderCounterAppTest {
 
                 // 5. Process Order when customer do payment (initialize all variables using
                 // setters)
-
-                // 6. Send Order object to server
-                // Socket socket = new Socket(serverAddress, serverPortNo);
-                socket = new Socket(serverAddress, serverPortNo);
-
-                OutputStream outStream = socket.getOutputStream();
-                ObjectOutputStream oos = new ObjectOutputStream(outStream);
-                oos.writeObject(order);
-                socket.close();
 
                 // 7. Print receipt
                 // orderCounterView.displayReceipt(order);
@@ -246,8 +226,7 @@ public class OrderCounterAppTest {
     }
 
     public static Order setOrder(int orderId, int orderNumber, Date transactionDate, List<OrderItem> orderItems,
-            int totalOrderItem, double subTotal, double serviceTax, double rounding, double grandTotal,
-            double tenderedCash, double change) {
+            int totalOrderItem, double subTotal, double serviceTax, double rounding, double grandTotal, double change) {
 
         Order order = new Order();
 
@@ -260,8 +239,29 @@ public class OrderCounterAppTest {
         order.setServiceTax(serviceTax);
         order.setRounding(rounding);
         order.setGrandTotal(grandTotal);
-        order.setTenderedCash(tenderedCash);
         order.setChange(change);
+
+        return order;
+    }
+
+    public static Order calculateConfirmationOrder(Order order) {
+
+        double subTotal = order.getSubTotal();
+        double serviceTax = subTotal * 0.06;
+        double rounded = Math.round(serviceTax * 20.0) / 20.0;
+        double rounding = 0;
+        if (rounded != 0) {
+            rounding = rounded - serviceTax;
+        }
+        double grandTotal = subTotal + serviceTax + rounding;
+        // double tenderedCash = order.getTenderedCash();
+        // double change = tenderedCash - grandTotal;
+
+        order.setServiceTax(serviceTax);
+        order.setRounding(rounding);
+        order.setGrandTotal(grandTotal);
+        // order.setTenderedCash(tenderedCash);
+        // order.setChange(change);
 
         return order;
     }

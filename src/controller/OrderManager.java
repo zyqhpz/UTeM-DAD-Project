@@ -217,4 +217,11 @@ public class OrderManager {
             pstmt.close();
         }
     }
+
+    public Order calculateChange(Order order) {
+        double change = order.getTenderedCash() - order.getGrandTotal();
+        order.setChange(change);
+
+        return order;
+    }
 }
