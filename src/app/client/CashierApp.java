@@ -166,9 +166,9 @@ public class CashierApp {
                 		
                 		System.out.print("\t Quantity: ");
                     	int quantity = sc.nextInt();
-                    	totalOrderItem = totalOrderItem + quantity;
+                    	totalOrderItem += quantity;
                     	double itemPrice = priceList[choice-1];
-                    	subTotal = subTotal + quantity*itemPrice;
+                    	subTotal += quantity*itemPrice;
                     
                         
                         // get time
@@ -204,7 +204,7 @@ public class CashierApp {
                 	Calendar calendar = Calendar.getInstance();
                     calendar.set(2022, 5, 7, 20, 1, 1);
                 	
-                	int orderId = 2000 + orderNumber;
+                	int orderId = 1000 + orderNumber;
                 	Date transactionDate = calendar.getTime();
 //                	List<OrderItem> orderItems;
 //                	double serviceTax = 0.05;
@@ -213,10 +213,11 @@ public class CashierApp {
 //                	double tenderedCash = 20;
 //                	double change = 9.95;
                 	
-                	double serviceTax = 0.05;
+                	double serviceTax = order.getSubTotal() * 0.06;
                 	double rounding = 0;
-                	double grandTotal = 10.05;
-                	double tenderedCash = 0;
+                	
+                	double grandTotal = subTotal + serviceTax;
+                	double tenderedCash = order.getTenderedCash();
                 	double change = 9.95;
                 	
                 	order = new Order(orderId, orderNumber, transactionDate, 
@@ -229,6 +230,9 @@ public class CashierApp {
                 		// clear screen
                 		new ProcessBuilder("cmd", "/c", "cls").inheritIO()
                 			.start().waitFor();
+                		
+                		order.setRounding(Math.round(grandTotal*20)/20);
+                		
                 	
                 		// display confirmation page
                 		view.confirmationPage(order);
@@ -239,6 +243,7 @@ public class CashierApp {
                 		if(payChoice == 1) {
                 			System.out.print("\n\tTendered cash: ");
                 			tenderedCash = sc.nextDouble();
+                			order.setTenderedCash(tenderedCash);
                 			
                 			
                 			
@@ -264,8 +269,8 @@ public class CashierApp {
             	
             	
             	
-                // 5. Process Order when customer do payment (initialize all variables using
-                // setters)
+                // 5. Process Order when customer do payment (initialize all 
+                // variables using setters)
 
                 // 6. Send Order object to server
                 Socket socket = new Socket(serverAddress, serverPortNo);
@@ -299,8 +304,6 @@ public class CashierApp {
 //    	
 //    	return order;
 //    }
-    
-    
 	
 }
 
