@@ -1,46 +1,37 @@
 package app.client;
 
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
 
 import app.client.thread.PreparationCounterGetter;
-import model.*;
 
 /**
  * This class represent the client (Preparation Counter) app for
  * HornettTeaOrderServerApp
  * 
- * Function: to start the client-side program for the application
+ * This will start the client-side program for the application and start a
+ * thread to get the order from the server asyncronously
  * 
- * @author haziqhapiz
+ * @author WongKakLok
  */
 
 public class PreparationCounterApp {
 	public static void main(String args[]) throws ClassNotFoundException, Exception {
 
-		System.out.println("\n\nStarting PreparationCounterApp..\n");
-
-		Order order = null;
-
-		ServerSocket serverSocket = null;
-
-		Scanner sc = new Scanner(System.in);
+		System.out.println("\n\tStarting PreparationCounterApp..\n");
 
 		try {
 
 			// Server information
 			InetAddress serverAddress = InetAddress.getLocalHost();
 
-			int portNo = 8088;
-			Socket baristaSocket = new Socket(serverAddress, portNo);
+			Socket baristaSocket = new Socket(serverAddress, 8088);
 			Socket baristaToServerSocket = new Socket(serverAddress, 8089);
 
 			Runnable preparationCounterGetter = null;
 			Thread preparationCounterThread = null;
 
-			preparationCounterGetter = new PreparationCounterGetter(serverSocket, baristaSocket, baristaToServerSocket);
+			preparationCounterGetter = new PreparationCounterGetter(baristaSocket, baristaToServerSocket);
 			preparationCounterThread = new Thread(preparationCounterGetter);
 
 			preparationCounterThread.start();

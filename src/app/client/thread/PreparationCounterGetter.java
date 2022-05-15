@@ -2,32 +2,19 @@ package app.client.thread;
 
 import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Scanner;
 
-import model.ItemProduct;
 import model.Order;
-import model.OrderItem;
 
 public class PreparationCounterGetter implements Runnable {
     private Socket baristaSocket = null;
-    private InetAddress serverAddress = null;
-    private ServerSocket serverSocket = null;
     private Socket baristaToServerSocket = null;
 
     List<Order> orders = new ArrayList<Order>();
 
-    private Order order;
-
-    public PreparationCounterGetter(ServerSocket serverSocket, Socket baristaSocket, Socket baristaToServerSocket) {
-        this.serverSocket = serverSocket;
+    public PreparationCounterGetter(Socket baristaSocket, Socket baristaToServerSocket) {
         this.baristaSocket = baristaSocket;
         this.baristaToServerSocket = baristaToServerSocket;
     }
@@ -67,9 +54,7 @@ public class PreparationCounterGetter implements Runnable {
                         }
                     }
 
-                    preparationCounterMainMenu = new PreparationCounterMainMenu(serverSocket, order,
-                            baristaToServerSocket,
-                            orders);
+                    preparationCounterMainMenu = new PreparationCounterMainMenu(baristaToServerSocket, orders);
 
                     baristaMainMenuThread = new Thread(preparationCounterMainMenu);
                 } catch (Exception e) {

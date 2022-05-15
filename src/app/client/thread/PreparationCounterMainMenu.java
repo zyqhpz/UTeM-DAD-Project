@@ -1,34 +1,24 @@
 package app.client.thread;
 
-import java.io.InputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import model.ItemProduct;
 import model.Order;
-import model.OrderItem;
 import view.PreparationCounterView;
 
 public class PreparationCounterMainMenu implements Runnable {
 
-    private ServerSocket serverSocket = null;
     private Socket socket = null;
-
-    private Order order;
 
     private List<Order> orders = new ArrayList<Order>();
 
-    public PreparationCounterMainMenu(ServerSocket serverSocket, Order order, Socket socket, List<Order> orders) {
-        this.serverSocket = serverSocket;
-        this.order = order;
+    public PreparationCounterMainMenu(Socket socket, List<Order> orders) {
         this.socket = socket;
         this.orders = orders;
     }
@@ -40,14 +30,12 @@ public class PreparationCounterMainMenu implements Runnable {
         Scanner sc = new Scanner(System.in);
         int optionToViewPending;
         int optionToUpdateStatus = -1;
-        // TODO Auto-generated method stub
         Date date = new Date();
         System.out.println("\n\t" + date.toString() + "\n");
 
         try {
 
             // Server information
-            int serverPortNo = 8088;
             InetAddress serverAddress = InetAddress.getLocalHost();
 
             do {
@@ -132,42 +120,5 @@ public class PreparationCounterMainMenu implements Runnable {
             e.printStackTrace();
         }
 
-    }
-
-    public void display() {
-        System.out.println("\n\t1. Get Order");
-        System.out.println("\t2. Exit");
-        System.out.print("\n\tEnter your choice: ");
-        Scanner sc = new Scanner(System.in);
-        System.out.print(">> ");
-        int choice = sc.nextInt();
-        sc.nextLine();
-        sc.reset();
-        switch (choice) {
-            case 1:
-                try {
-                    InetAddress serverAddress = InetAddress.getLocalHost();
-                    socket = new Socket(serverAddress, 8089);
-
-                    order.setOrderId(2);
-                    OutputStream outStream = socket.getOutputStream();
-                    ObjectOutputStream oos = new ObjectOutputStream(outStream);
-                    oos.writeObject(order);
-                    System.out.println("Order updated");
-
-                    oos.flush();
-                    oos.reset();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                break;
-            case 2:
-                break;
-            default:
-                System.out.println("\n\tInvalid choice. Please try again.\n");
-                break;
-        }
     }
 }
