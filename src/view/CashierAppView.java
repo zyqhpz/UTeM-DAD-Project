@@ -1,6 +1,8 @@
 package view;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -12,6 +14,13 @@ import model.OrderItem;
 public class CashierAppView {
 	
 	static Scanner scanner = new Scanner(System.in);
+	
+	static int max = 99999999;
+	static int min = 50000000;
+	static int billNo = (int)Math.floor(Math.random()*(max-min+1)+min);
+	
+	static SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
+    static Date date = new Date();  
 
 	static String[] nameList = {
         	"(Cold) Signature Brown Sugar Pearl Milk Tea",
@@ -63,28 +72,28 @@ public class CashierAppView {
         
         
 	static double[] priceList = {
-        	6.50,
-        	7.45,
-        	6.50,
-        	7.45,
-        	7.50,
-        	7.45,
-        	8.35,
-        	6.50,
-        	7.45,
-        	5.55,
-        	6.50,
-        	5.55,
-        	6.50,
-        	8.35,
-        	8.35,
-        	8.35,
-        	8.35,
-        	8.35,
-        	8.35,
-        	7.45,
-        	7.45
-        };
+    	6.50,
+    	7.45,
+    	6.50,
+    	7.45,
+    	7.50,
+    	7.45,
+    	8.35,
+    	6.50,
+    	7.45,
+    	5.55,
+    	6.50,
+    	5.55,
+    	6.50,
+    	8.35,
+    	8.35,
+    	8.35,
+    	8.35,
+    	8.35,
+    	8.35,
+    	7.45,
+    	7.45
+    };
 	
 	public static void displayOrderList(ItemProduct[] menuList) {
 		
@@ -123,7 +132,8 @@ public class CashierAppView {
 		
 		
 		System.out.println("-----------------------------------------");
-		System.out.println("Your order number is: " + order.getOrderNumber());
+		System.out.println("Your order number is: " 
+				+ (order.getOrderNumber() + 1000 ));
 		System.out.println("-----------------------------------------");
 		System.out.println("HornetTea");
 		System.out.println("FICTS");
@@ -133,8 +143,8 @@ public class CashierAppView {
 		System.out.println("Melaka, Malaysia");
 		System.out.println("-----------------------------------------");
 		System.out.println("Invoice\n");
-		System.out.println("Bill No: ");
-		System.out.println("Date: \n");
+		System.out.println("Bill No: " + billNo);
+		System.out.println("Date: "+ formatter.format(date) +"\n");
 		System.out.println("Details");
 		System.out.println("-----------------------------------------");
 		System.out.printf("%-22s %5s %7s", "Item Name", "Qty", "Price(RM)\n");
@@ -194,8 +204,6 @@ public class CashierAppView {
 		System.out.println("-----------------------------------------");
 		System.out.printf("%-22s %5s %-7s", "Item Name", "Qty", "Price (RM)\n");
 		System.out.println("-----------------------------------------");
-		
-		
 		
 		
 		for(int i = 0; i<order.getOrderItems().size(); i++) {
