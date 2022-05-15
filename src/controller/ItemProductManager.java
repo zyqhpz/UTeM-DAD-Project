@@ -2,6 +2,7 @@ package controller;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class ItemProductManager {
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setInt(1, itemProductId);
-            java.sql.ResultSet rs = preparedStatement.executeQuery();
+            ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
                 itemProduct.setItemProductId(rs.getInt("ItemProductId"));
@@ -48,7 +49,6 @@ public class ItemProductManager {
         System.out.println("\n\nLoading ItemProducts..\n");
 
         // do connection to database
-        Database db = new Database();
         Connection conn = Database.doConnection();
 
         // create a query to get all the item products
@@ -61,7 +61,7 @@ public class ItemProductManager {
         pstmt.executeQuery();
 
         // get the result set
-        java.sql.ResultSet rs = pstmt.getResultSet();
+        ResultSet rs = pstmt.getResultSet();
 
         // loop through the result set
         while (rs.next()) {

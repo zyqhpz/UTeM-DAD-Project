@@ -15,20 +15,13 @@ import controller.database.Database;
 
 public class OrderManager {
 
-    private Order order;
-    private Database db;
     private Connection conn;
 
     public OrderManager() {
     }
 
-    public OrderManager(Order order) {
-        this.order = order;
-    }
-
     public List<Order> loadData() throws ClassNotFoundException, SQLException {
-        db = new Database();
-        conn = db.doConnection();
+        conn = Database.doConnection();
 
         String sql = "SELECT * FROM `order` JOIN orderitem ON orderitem.Order = `order`.OrderId WHERE orderitem.OrderStatus = 'Processing' GROUP BY `order`.OrderId";
 
@@ -71,21 +64,9 @@ public class OrderManager {
      * Insert Order data into database
      * 
      */
-    // public void insertData() throws ClassNotFoundException, SQLException {
-    // db = new Database();
-    // conn = db.doConnection();
-
-    // OrderItem orderItem = new OrderItem();
-
-    // insertDataOrder();
-
-    // conn.close();
-    // }
-
     public void insertDataOrder(Order order) throws SQLException, ClassNotFoundException {
 
-        db = new Database();
-        conn = db.doConnection();
+        conn = Database.doConnection();
 
         // prepare statement
         int orderId;
@@ -99,7 +80,10 @@ public class OrderManager {
         double tenderedCash;
         double change;
 
-        String sql = "INSERT INTO `order` (OrderNumber, TransactionDate, TotalOrderItem, SubTotal, ServiceTax, Rounding, GrandTotal, TenderedCash, `Change`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        // String sql = "INSERT INTO `order` (OrderNumber, TransactionDate,
+        // TotalOrderItem, SubTotal, ServiceTax, Rounding, GrandTotal, TenderedCash,
+        // `Change`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO `order` (OrderNumber, TotalOrderItem, SubTotal, ServiceTax, Rounding, GrandTotal, TenderedCash, `Change`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -114,21 +98,17 @@ public class OrderManager {
         tenderedCash = order.getTenderedCash();
         change = order.getChange();
 
-        // java.util.Date date = new java.util.Date();
-        // java.sql.Timestamp transactionDate = new java.sql.Timestamp(date.getTime());
-
         // convert transactionDate to sql.Date
         java.sql.Date sqlDate = new java.sql.Date(transactionDate.getTime());
 
         pstmt.setInt(1, orderNumber);
-        pstmt.setDate(2, sqlDate);
-        pstmt.setInt(3, totalOrderItem);
-        pstmt.setDouble(4, subTotal);
-        pstmt.setDouble(5, serviceTax);
-        pstmt.setDouble(6, rounding);
-        pstmt.setDouble(7, grandTotal);
-        pstmt.setDouble(8, tenderedCash);
-        pstmt.setDouble(9, change);
+        pstmt.setInt(2, totalOrderItem);
+        pstmt.setDouble(3, subTotal);
+        pstmt.setDouble(4, serviceTax);
+        pstmt.setDouble(5, rounding);
+        pstmt.setDouble(6, grandTotal);
+        pstmt.setDouble(7, tenderedCash);
+        pstmt.setDouble(8, change);
 
         // execute the statement
         pstmt.executeUpdate();
@@ -151,12 +131,7 @@ public class OrderManager {
     public void insertDataOrderItem(Order order) throws ClassNotFoundException, SQLException {
         List<OrderItem> orderItems = order.getOrderItems();
 
-        // Order order = new Order();
-
-        // order.setOrderItems(orderItems);
-
-        db = new Database();
-        conn = db.doConnection();
+        conn = Database.doConnection();
 
         for (OrderItem orderItem : orderItems) {
             int itemProductId;
@@ -197,6 +172,8 @@ public class OrderManager {
     public void updateOrderStatus(Order order) throws ClassNotFoundException, SQLException {
         List<OrderItem> orderItems = order.getOrderItems();
 
+        conn = Database.doConnection();
+
         for (OrderItem orderItem : orderItems) {
             int orderItemId = orderItem.getOrderItemId();
             String orderStatus = orderItem.getOrderStatus();
@@ -216,6 +193,7 @@ public class OrderManager {
             // close the connection
             pstmt.close();
         }
+        conn.close();
     }
 
     public Order calculateChange(Order order) {
