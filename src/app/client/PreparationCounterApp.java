@@ -35,7 +35,7 @@ public class PreparationCounterApp {
 
 			int portNo = 8088;
 			Socket baristaSocket = new Socket(serverAddress, portNo);
-			Socket baristaToServerSocket = new Socket(serverAddress, 8085);
+			Socket baristaToServerSocket = new Socket(serverAddress, 8089);
 
 			Runnable preparationCounterGetter = null;
 			Thread preparationCounterThread = null;

@@ -37,7 +37,6 @@ public class OrderCounterApp {
         Order order;
         Socket socket;
 
-        String continueOrder = "Yes";
         Scanner sc = new Scanner(System.in);
 
         List<ItemProduct> itemProducts = new ArrayList<ItemProduct>();

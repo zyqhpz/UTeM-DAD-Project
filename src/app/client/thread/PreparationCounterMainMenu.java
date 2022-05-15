@@ -96,7 +96,7 @@ public class PreparationCounterMainMenu implements Runnable {
                                 // remove updated order from list
                                 orders.remove(updatedOrder);
 
-                                socket = new Socket(serverAddress, 8085);
+                                socket = new Socket(serverAddress, 8089);
 
                                 // 6. Send Order object to server
                                 OutputStream outStream = socket.getOutputStream();
@@ -147,7 +147,7 @@ public class PreparationCounterMainMenu implements Runnable {
             case 1:
                 try {
                     InetAddress serverAddress = InetAddress.getLocalHost();
-                    socket = new Socket(serverAddress, 8085);
+                    socket = new Socket(serverAddress, 8089);
 
                     order.setOrderId(2);
                     OutputStream outStream = socket.getOutputStream();

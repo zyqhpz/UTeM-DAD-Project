@@ -44,7 +44,7 @@ public class OrderServerApp {
             // bind to a port
             cashierServerSocket = new ServerSocket(8087);
             baristaServerSocket = new ServerSocket(8088);
-            baristaGetterServerSocket = new ServerSocket(8085);
+            baristaGetterServerSocket = new ServerSocket(8089);
 
             System.out.println("\tWaiting for upcoming request\n");
 
