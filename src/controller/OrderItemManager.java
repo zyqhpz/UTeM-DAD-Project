@@ -54,8 +54,6 @@ public class OrderItemManager {
 
 			String sql = "INSERT INTO orderItem (ItemProduct, `Order`, Quantity, SubTotalAmount) VALUES (?, ?, ?, ?)";
 
-			System.out.println("Test");
-
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 
 			// set the values
