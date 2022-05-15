@@ -35,7 +35,7 @@ public class CashierApp {
         String continueOrder = "Yes";
         Scanner sc = new Scanner(System.in);
         
-        List<OrderItem> orderItems = new ArrayList<OrderItem>();
+//        List<OrderItem> orderItems = new ArrayList<OrderItem>();
         
         // This array contains Objects of the item product
         ItemProduct[] menuList = new ItemProduct[30];
@@ -135,7 +135,9 @@ public class CashierApp {
 
             // Page for making a new order
             do {
-            	Order order = new Order();
+            	List<OrderItem> orderItems = new ArrayList<OrderItem>();
+//            	Order order = new Order();
+            	Order order = null;
             	int totalOrderItem = 0;
             	double subTotal = 0;
             	
@@ -213,12 +215,12 @@ public class CashierApp {
 //                	double tenderedCash = 20;
 //                	double change = 9.95;
                 	
-                	double serviceTax = order.getSubTotal() * 0.06;
+                	double serviceTax = subTotal * 0.06;
                 	double rounding = 0;
                 	
                 	double grandTotal = subTotal + serviceTax;
-                	double tenderedCash = order.getTenderedCash();
-                	double change = 9.95;
+                	double tenderedCash = 0;
+                	double change = 0;
                 	
                 	order = new Order(orderId, orderNumber, transactionDate, 
                 			orderItems, totalOrderItem, subTotal, serviceTax, 
