@@ -28,8 +28,6 @@ import view.OrderCounterView;
 
 public class OrderCounterApp {
 
-    private static int orderNumber = 1;
-
     public static void main(String args[]) {
 
         System.out.println("\n\nStarting OrderCounterApp..\n");
@@ -42,6 +40,8 @@ public class OrderCounterApp {
         List<ItemProduct> itemProducts = new ArrayList<ItemProduct>();
         List<OrderItem> orderItems = new ArrayList<OrderItem>();
         OrderCounterView orderCounterView = new OrderCounterView();
+
+        int orderNumberIndex = 1;
 
         try {
             // Server information
@@ -62,13 +62,10 @@ public class OrderCounterApp {
                     if (al.size() > 0) {
                         // Iterate.
                         for (int i = 0; i < al.size(); i++) {
-                            // Still not enough for a type.
                             Object o = al.get(i);
                             if (o instanceof ItemProduct) {
-                                // Here we go!
                                 ItemProduct v = (ItemProduct) o;
                                 itemProducts.add(v);
-                                // use v.
                             }
                         }
                     }
@@ -92,6 +89,7 @@ public class OrderCounterApp {
                 int totalOrderItem = 0;
                 double subTotal = 0;
                 double subTotalAmount = 0;
+                int orderNumber = 0;
 
                 int choice;
 
@@ -106,6 +104,8 @@ public class OrderCounterApp {
                     System.out.println("\n\t Enter 0 to complete this order");
                     System.out.print("\n\t Choice: ");
                     choice = sc.nextInt();
+
+                    orderNumber = 2000 + orderNumberIndex;
 
                     // continue to add beverage
                     if (choice != 0) {
@@ -142,16 +142,14 @@ public class OrderCounterApp {
                     // Customer order finish
                     // 4. Add to Order object
 
-                    int orderId = 2000 + orderNumber;
-
                     java.util.Date date = new java.util.Date();
                     Timestamp transactionDate = new Timestamp(date.getTime());
 
                     order.setSubTotal(subTotal);
                     order.setTotalOrderItem(totalOrderItem);
                     order.setOrderItems(orderItems);
-                    order.setOrderId(orderId);
                     order.setTransactionDate(transactionDate);
+                    order.setOrderNumber(orderNumber);
 
                     order = calculateConfirmationOrder(order);
 
@@ -213,7 +211,7 @@ public class OrderCounterApp {
                 sc.nextLine();
 
                 // add 1 to orderNumber
-                orderNumber++;
+                orderNumberIndex++;
 
             } while (true);
 

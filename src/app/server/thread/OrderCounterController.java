@@ -54,10 +54,10 @@ public class OrderCounterController implements Runnable {
                 orderManager.insertDataOrder(order);
                 System.out.println("\n\tNew order has been inserted to database\n");
 
-                orders = null;
+                orders = new ArrayList<Order>();
                 orders = orderManager.loadData();
 
-                System.out.println("\n\tCurrent order in Processing: " + orders.size() + "\n");
+                System.out.println("\n\tCurrent order in Processing status: " + orders.size() + "\n");
 
                 if (orders != null) {
                     try {

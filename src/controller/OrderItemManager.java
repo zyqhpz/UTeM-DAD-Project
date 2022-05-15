@@ -11,6 +11,8 @@ import model.OrderItem;
 
 public class OrderItemManager {
 
+	private Connection conn;
+
 	private OrderItem orderItem;
 
 	public void updateOrderStatus(Order order) throws ClassNotFoundException, SQLException {
@@ -36,6 +38,42 @@ public class OrderItemManager {
 		preparedStatement.setInt(3, orderId);
 
 		preparedStatement.executeUpdate();
+
+		conn.close();
+	}
+
+	public void insertDataOrderItem(Order order) throws ClassNotFoundException, SQLException {
+		List<OrderItem> orderItems = order.getOrderItems();
+
+		conn = Database.doConnection();
+
+		for (OrderItem orderItem : orderItems) {
+			int itemProductId;
+			int quantity;
+			double subTotalAmount;
+
+			String sql = "INSERT INTO orderItem (ItemProduct, `Order`, Quantity, SubTotalAmount) VALUES (?, ?, ?, ?)";
+
+			System.out.println("Test");
+
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+
+			// set the values
+			itemProductId = orderItem.getItemProduct().getItemProductId();
+			quantity = orderItem.getQuantity();
+			subTotalAmount = orderItem.getSubTotalAmount();
+
+			pstmt.setInt(1, itemProductId);
+			pstmt.setInt(2, order.getOrderId());
+			pstmt.setInt(3, quantity);
+			pstmt.setDouble(4, subTotalAmount);
+
+			// execute the statement
+			pstmt.executeUpdate();
+
+			// close the connection
+			pstmt.close();
+		}
 
 		conn.close();
 	}
@@ -73,5 +111,5 @@ public class OrderItemManager {
 		conn.close();
 
 		return orderItems;
-  }
+	}
 }

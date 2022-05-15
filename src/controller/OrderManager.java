@@ -33,7 +33,6 @@ public class OrderManager {
         // if rs is not null, then there are some orders in the database
         while (rs != null && rs.next()) {
             Order order = new Order();
-            System.out.println("Order Id: " + rs.getInt("OrderId"));
             order.setOrderId(rs.getInt("OrderId"));
             OrderItemManager orderItemManager = new OrderItemManager();
             List<OrderItem> orderItems = orderItemManager.loadOrderItem(order.getOrderId());
@@ -80,9 +79,6 @@ public class OrderManager {
         double tenderedCash;
         double change;
 
-        // String sql = "INSERT INTO `order` (OrderNumber, TransactionDate,
-        // TotalOrderItem, SubTotal, ServiceTax, Rounding, GrandTotal, TenderedCash,
-        // `Change`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         String sql = "INSERT INTO `order` (OrderNumber, TotalOrderItem, SubTotal, ServiceTax, Rounding, GrandTotal, TenderedCash, `Change`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
@@ -97,9 +93,6 @@ public class OrderManager {
         grandTotal = order.getGrandTotal();
         tenderedCash = order.getTenderedCash();
         change = order.getChange();
-
-        // convert transactionDate to sql.Date
-        java.sql.Date sqlDate = new java.sql.Date(transactionDate.getTime());
 
         pstmt.setInt(1, orderNumber);
         pstmt.setInt(2, totalOrderItem);
@@ -125,42 +118,8 @@ public class OrderManager {
         conn.close();
 
         // insert order item
-        insertDataOrderItem(order);
-    }
-
-    public void insertDataOrderItem(Order order) throws ClassNotFoundException, SQLException {
-        List<OrderItem> orderItems = order.getOrderItems();
-
-        conn = Database.doConnection();
-
-        for (OrderItem orderItem : orderItems) {
-            int itemProductId;
-            int quantity;
-            double subTotalAmount;
-            // String orderStatus;
-            // Date readyTime;
-
-            String sql = "INSERT INTO orderItem (ItemProduct, `Order`, Quantity, SubTotalAmount) VALUES (?, ?, ?, ?)";
-
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-
-            // set the values
-            itemProductId = orderItem.getItemProduct().getItemProductId();
-            quantity = orderItem.getQuantity();
-            subTotalAmount = orderItem.getSubTotalAmount();
-
-            pstmt.setInt(1, itemProductId);
-            pstmt.setInt(2, order.getOrderId());
-            pstmt.setInt(3, quantity);
-            pstmt.setDouble(4, subTotalAmount);
-
-            // execute the statement
-            pstmt.executeUpdate();
-
-            // close the connection
-            pstmt.close();
-            conn.close();
-        }
+        OrderItemManager orderItemManager = new OrderItemManager();
+        orderItemManager.insertDataOrderItem(order);
     }
 
     /*

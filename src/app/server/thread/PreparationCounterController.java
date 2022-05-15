@@ -30,14 +30,14 @@ public class PreparationCounterController implements Runnable {
 
                 order = (Order) baristaOIS.readObject();
 
-                int orderId = order.getOrderId();
+                int orderNumber = order.getOrderNumber();
 
                 try {
                     // update order status
                     OrderItemManager orderItemManager = new OrderItemManager();
                     orderItemManager.updateOrderStatus(order);
 
-                    System.out.println("\n\tOrderId: " + orderId + ". Order status updated.\n");
+                    System.out.println("\n\tOrder Number: " + orderNumber + ". Order status updated.\n");
 
                 } catch (Exception e) {
                     e.printStackTrace();
