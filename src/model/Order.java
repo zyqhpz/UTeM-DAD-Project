@@ -4,12 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-/**
- * This is the model class for Order.
- *
- */
 public class Order implements Serializable {
-	
 	private int orderId;
 	private int orderNumber;
 	private Date transactionDate;
@@ -21,6 +16,26 @@ public class Order implements Serializable {
 	private double grandTotal;
 	private double tenderedCash;
 	private double change;
+	
+	public Order() {}
+	
+	public Order(int orderId, int orderNumber, Date transactionDate, 
+			List<OrderItem> orderItems, int totalOrderItem, double subTotal,
+			double serviceTax, double rounding, double grandTotal,
+			double tenderedCash, double change) {
+		
+		this.orderId = orderId;
+		this.orderNumber = orderNumber;
+		this.transactionDate = transactionDate;
+		this.orderItems = orderItems;
+		this.totalOrderItem = totalOrderItem;
+		this.subTotal = subTotal;
+		this.serviceTax = serviceTax;
+		this.rounding = rounding;
+		this.grandTotal = grandTotal;
+		this.tenderedCash = tenderedCash;
+		this.change = change;
+	}
 
 	public int getOrderId() {
 		return orderId;
