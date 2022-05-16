@@ -9,16 +9,30 @@ import controller.database.Database;
 import model.Order;
 import model.OrderItem;
 
+/**
+ * This is a controller class for OrderItem.
+ *
+ */
+
 public class OrderItemManager {
 
 	private Connection conn;
-
 	private OrderItem orderItem;
 
-	public void updateOrderStatus(Order order) throws ClassNotFoundException, SQLException {
+	/**
+	 * This method update the orderStatus and readyTime of the order 
+	 * in database.
+	 * 
+	 * @param order
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	public void updateOrderStatus(Order order) 
+			throws ClassNotFoundException, SQLException {
 
 		// Update query OrderStatus = 'Ready' and ReadyTime = current time
-		String sql = "UPDATE orderitem SET OrderStatus = ?, ReadyTime = ? WHERE `Order` = ?";
+		String sql = "UPDATE orderitem SET OrderStatus = ?, ReadyTime = ? "
+				+ "WHERE `Order` = ?";
 
 		List<OrderItem> orderItems = order.getOrderItems();
 		orderItems.size();
@@ -29,7 +43,6 @@ public class OrderItemManager {
 		java.util.Date date = new java.util.Date();
 		java.sql.Timestamp currentTime = new java.sql.Timestamp(date.getTime());
 
-		// connect to database
 		Connection conn = Database.doConnection();
 
 		PreparedStatement preparedStatement = conn.prepareStatement(sql);
@@ -42,7 +55,8 @@ public class OrderItemManager {
 		conn.close();
 	}
 
-	public void insertDataOrderItem(Order order) throws ClassNotFoundException, SQLException {
+	public void insertDataOrderItem(Order order) 
+			throws ClassNotFoundException, SQLException {
 		List<OrderItem> orderItems = order.getOrderItems();
 
 		conn = Database.doConnection();
@@ -52,7 +66,8 @@ public class OrderItemManager {
 			int quantity;
 			double subTotalAmount;
 
-			String sql = "INSERT INTO orderItem (ItemProduct, `Order`, Quantity, SubTotalAmount) VALUES (?, ?, ?, ?)";
+			String sql = "INSERT INTO orderItem (ItemProduct, `Order`, "
+					+ "Quantity, SubTotalAmount) VALUES (?, ?, ?, ?)";
 
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 
@@ -76,7 +91,17 @@ public class OrderItemManager {
 		conn.close();
 	}
 
-	public List<OrderItem> loadOrderItem(int orderId) throws ClassNotFoundException, SQLException {
+	/**
+	 * This method retrieve OrderItem from database when given orderId.
+	 * 
+	 * @param orderId
+	 * @return
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	public List<OrderItem> loadOrderItem(int orderId) 
+			throws ClassNotFoundException, SQLException {
+		
 		List<OrderItem> orderItems = new ArrayList<OrderItem>();
 
 		String sql = "SELECT * FROM orderitem WHERE `Order` = ?";
@@ -95,7 +120,8 @@ public class OrderItemManager {
 				orderItem.setOrderItemId(resultSet.getInt("OrderItem"));
 				int itemProductId = resultSet.getInt("ItemProduct");
 				itemProductManager.getItemProduct(itemProductId);
-				orderItem.setItemProduct(itemProductManager.getItemProduct(itemProductId));
+				orderItem.setItemProduct(itemProductManager.
+						getItemProduct(itemProductId));
 				orderItem.setQuantity(resultSet.getInt("Quantity"));
 				orderItem.setOrderStatus(resultSet.getString("OrderStatus"));
 
@@ -105,7 +131,6 @@ public class OrderItemManager {
 			e.printStackTrace();
 		}
 
-		// close the connection
 		conn.close();
 
 		return orderItems;

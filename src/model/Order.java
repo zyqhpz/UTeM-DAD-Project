@@ -4,7 +4,12 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * This is the model class for Order.
+ *
+ */
 public class Order implements Serializable {
+	
 	private int orderId;
 	private int orderNumber;
 	private Date transactionDate;

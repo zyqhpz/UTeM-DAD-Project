@@ -7,16 +7,17 @@ import app.client.thread.PreparationCounterGetter;
 
 /**
  * This class represent the client (Preparation Counter) app for
- * HornettTeaOrderServerApp
+ * the system
  * 
  * This will start the client-side program for the application and start a
- * thread to get the order from the server asyncronously
+ * thread to get the order from the server asynchronously
  * 
  * @author WongKakLok
  */
 
 public class PreparationCounterApp {
-	public static void main(String args[]) throws ClassNotFoundException, Exception {
+	public static void main(String args[]) 
+			throws ClassNotFoundException, Exception {
 
 		System.out.println("\n\tStarting PreparationCounterApp..\n");
 
@@ -28,12 +29,16 @@ public class PreparationCounterApp {
 			Socket baristaSocket = new Socket(serverAddress, 8088);
 			Socket baristaToServerSocket = new Socket(serverAddress, 8089);
 
+			// Use multithread to always receive new list of
+			// pending orders from server
 			Runnable preparationCounterGetter = null;
 			Thread preparationCounterThread = null;
 
-			preparationCounterGetter = new PreparationCounterGetter(baristaSocket, baristaToServerSocket);
+			preparationCounterGetter = new PreparationCounterGetter
+					(baristaSocket, baristaToServerSocket);
 			preparationCounterThread = new Thread(preparationCounterGetter);
 
+			// Execute thread
 			preparationCounterThread.start();
 
 		} catch (

@@ -11,6 +11,13 @@ import java.util.List;
 import controller.OrderManager;
 import model.Order;
 
+/**
+ * This class is the controller class of server towards Order Counter.
+ * 
+ * @author haziqhapiz
+ *
+ */
+
 public class OrderCounterController implements Runnable {
 
     private ServerSocket cashierServerSocket = null;
@@ -52,32 +59,39 @@ public class OrderCounterController implements Runnable {
                 ObjectOutputStream oos = new ObjectOutputStream(os);
                 oos.writeObject(order);
 
-                System.out.println("\n\tNew order has been calculated. Return the order to Order Counter\n");
+                System.out.println("\n\tNew order has been calculated. "
+                		+ "Return the order to Order Counter\n");
 
                 orderManager.insertDataOrder(order);
-                System.out.println("\n\tNew order has been inserted into database\n");
 
+                System.out.println("\n\tNew order has been "
+                		+ "inserted to database\n");
                 LogRecorder.recordLog("Order Number: " + order.getOrderNumber()
                         + " inserted into database");
 
                 orders = new ArrayList<Order>();
                 orders = orderManager.loadData();
 
-                System.out.println("\n\tCurrent order in Processing status: " + orders.size() + "\n");
+                System.out.println("\n\tCurrent order in Processing status: " 
+                		+ orders.size() + "\n");
 
                 if (orders != null) {
                     try {
 
-                        OutputStream baristaOS = baristaSocket.getOutputStream();
-                        ObjectOutputStream baristaOOS = new ObjectOutputStream(baristaOS);
+                        OutputStream baristaOS = 
+                        		baristaSocket.getOutputStream();
+                        ObjectOutputStream baristaOOS = 
+                        		new ObjectOutputStream(baristaOS);
 
                         // send orders to barista
                         baristaOOS.writeObject(orders);
 
-                        System.out.println("\n\tOrder list has been sent to Preparation Counter\n");
+                        System.out.println("\n\tOrder list has been sent to "
+                        		+ "Preparation Counter\n");
 
                     } catch (Exception e) {
-                        System.out.println("\n\tError: " + e.getMessage() + "\n");
+                        System.out.println("\n\tError: " + e.getMessage() 
+                        	+ "\n");
                     }
                 } else {
                     System.out.println("\n\tOrders retrieve is blank.\n");

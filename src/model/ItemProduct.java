@@ -2,6 +2,10 @@ package model;
 
 import java.io.Serializable;
 
+/**
+ * This is the model class for ItemProduct.
+ *
+ */
 public class ItemProduct implements Serializable {
 
     private int itemProductId;
