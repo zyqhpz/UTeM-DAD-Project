@@ -73,7 +73,7 @@ public class OrderCounterController implements Runnable {
                 orders = new ArrayList<Order>();
 
                 // load all orders from database that are in status of "Processing"
-                orders = orderManager.loadData();
+                orders = orderManager.loadProcessingOrders();
 
                 System.out.println("\n\tCurrent order in Processing status: "
                         + orders.size() + "\n");

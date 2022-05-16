@@ -25,14 +25,14 @@ public class OrderManager {
     }
 
     /**
-     * This method retrieve orders that have not completed from the database
+     * This method retrieve orders that still in Processing status from the database
      * into an order list.
      * 
      * @return
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public List<Order> loadData() throws ClassNotFoundException, SQLException {
+    public List<Order> loadProcessingOrders() throws ClassNotFoundException, SQLException {
 
         conn = Database.doConnection();
 
