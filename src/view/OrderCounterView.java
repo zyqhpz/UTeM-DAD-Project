@@ -10,8 +10,9 @@ import model.ItemProduct;
 import model.Order;
 
 /**
- * This class is the view of client(Cashier) app.
+ * This class is the view of client(Order Counter) app.
  *
+ * @author DaysonTai
  */
 
 public class OrderCounterView {
@@ -31,15 +32,6 @@ public class OrderCounterView {
                                 + "     | Price (RM) |");
                 System.out.println("+----+----------------------------------------"
                                 + "-----+------------+");
-
-                // int i = 0;
-                // for (ItemProduct itemProduct : itemProducts) {
-                // System.out.println(
-                // String.format("%-1s %-2s %-1s %-43s %-1s %.2f %-2s", "|",
-                // itemProduct.getItemProductId(), "|",
-                // itemProduct.getName(), "|",
-                // itemProduct.getPrice(), " |"));
-                // }
 
                 for (ItemProduct itemProduct : itemProducts) {
                         System.out.println(String.format("%-1s %-2s %-1s %-43s %-1s %.2f %-2s", "|",

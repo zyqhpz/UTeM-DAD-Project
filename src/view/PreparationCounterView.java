@@ -13,6 +13,7 @@ import model.OrderItem;
 /**
  * This class is the view of client(Preparation Counter) app.
  *
+ * @author WongKakLok
  */
 
 public class PreparationCounterView {
@@ -69,11 +70,10 @@ public class PreparationCounterView {
 				orderItem = order.getOrderItems();
 
 				Date date = order.getTransactionDate();
-				String transactionDate = new SimpleDateFormat
-						("MM/dd/yyyy HH:mm:ss").format(date);
+				String transactionDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(date);
 
 				for (OrderItem orderItems : orderItem) {
-					
+
 					int itemQuantity = orderItems.getQuantity();
 
 					for (int counter = 0; counter < itemQuantity; counter++) {
@@ -85,8 +85,8 @@ public class PreparationCounterView {
 						System.out.println("\tDate: " + transactionDate + "\n");
 						System.out.println("\tName: \n\t" +
 								orderItems.getItemProduct().getName() + "\n");
-						System.out.println("\tSequence: " + 
-								orderItems.getSequenceNumber() + 
+						System.out.println("\tSequence: " +
+								orderItems.getSequenceNumber() +
 								" / " + itemQuantity);
 						System.out.println("\t--------------------------------"
 								+ "------------------\n");
