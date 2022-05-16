@@ -13,7 +13,7 @@ import model.Order;
 import app.server.thread.*;
 
 /**
- * This class represent the server app for OrderServerApp
+ * This class represent the server app for the system
  * 
  * Function: to start the server-side program for the application
  * 
@@ -22,7 +22,8 @@ import app.server.thread.*;
 
 public class OrderServerApp {
 
-    public static void main(String args[]) throws ClassNotFoundException, Exception {
+    public static void main(String args[]) 
+    		throws ClassNotFoundException, Exception {
 
         System.out.println("\n\nStarting OrderServerApp..\n");
 
@@ -49,31 +50,42 @@ public class OrderServerApp {
             System.out.println("\tWaiting for upcoming request\n");
 
             try {
+            	// Accept request from client(cashier)
                 Socket cashierSocket = cashierServerSocket.accept();
 
                 OutputStream outStream = cashierSocket.getOutputStream();
                 ObjectOutputStream oos = new ObjectOutputStream(outStream);
 
+                // Send itemProduct object to cashier
                 oos.writeObject(itemProducts);
 
-                System.out.println("\tItemProducts list sent to Order Counter\n");
+                System.out.println("\tItemProducts list "
+                		+ "sent to Order Counter\n");
 
             } catch (Exception e) {
-                System.out.println("\tItemProducts failed to send to Order Counter\n");
+                System.out.println("\tItemProducts failed to "
+                		+ "send to Order Counter\n");
             }
 
+            // Accept request from client(preparation counter)
             baristaSocket = baristaServerSocket.accept();
-
             baristaGetterSocket = baristaGetterServerSocket.accept();
 
-            Runnable baristaController = new PreparationCounterController(baristaGetterSocket,
+            // Create Runnable and Thread object for preparation counter
+            Runnable baristaController = 
+            		new PreparationCounterController(baristaGetterSocket,
                     baristaGetterServerSocket);
             Thread baristaControllerThread = new Thread(baristaController);
 
+            // Execute thread
             baristaControllerThread.start();
 
-            Runnable cashierToServer = new OrderCounterController(cashierServerSocket, baristaSocket);
+            // Create Runnable and Thread object for cashier
+            Runnable cashierToServer = new OrderCounterController
+            		(cashierServerSocket, baristaSocket);
             Thread cashierToServerThread = new Thread(cashierToServer);
+            
+            // Execute thread
             cashierToServerThread.start();
 
         } catch (Exception e) {

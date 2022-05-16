@@ -10,12 +10,21 @@ import app.client.thread.ClearScreen;
 import model.Order;
 import model.OrderItem;
 
+/**
+ * This class is the view of client(Preparation Counter) app.
+ *
+ */
+
 public class PreparationCounterView {
 
 	private List<Order> orders = new ArrayList<Order>();
 	Scanner sc = new Scanner(System.in);
 
-	// Main Screen
+	/**
+	 * This method displays the main screen of the Preparation Counter.
+	 * 
+	 * @return
+	 */
 	public int mainScreen() {
 
 		ClearScreen.ClearConsole();
@@ -27,7 +36,11 @@ public class PreparationCounterView {
 		return sc.nextInt();
 	}
 
-	// This method displays the latest order details at the preparation counter
+	/**
+	 * This method displays the latest pending orders.
+	 * 
+	 * @param orders
+	 */
 	public void displayOrders(List<Order> orders) {
 
 		this.orders = orders;
@@ -38,6 +51,12 @@ public class PreparationCounterView {
 		}
 	}
 
+	/**
+	 * This method prints the orderItem's sticker of specific order.
+	 * 
+	 * @param orderNumberByUser
+	 * @return
+	 */
 	public Order printSticker(int orderNumberByUser) {
 
 		int orderNumber;
@@ -50,9 +69,11 @@ public class PreparationCounterView {
 				orderItem = order.getOrderItems();
 
 				Date date = order.getTransactionDate();
-				String transactionDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(date);
+				String transactionDate = new SimpleDateFormat
+						("MM/dd/yyyy HH:mm:ss").format(date);
 
 				for (OrderItem orderItems : orderItem) {
+					
 					int itemQuantity = orderItems.getQuantity();
 
 					for (int counter = 0; counter < itemQuantity; counter++) {
@@ -64,7 +85,9 @@ public class PreparationCounterView {
 						System.out.println("\tDate: " + transactionDate + "\n");
 						System.out.println("\tName: \n\t" +
 								orderItems.getItemProduct().getName() + "\n");
-						System.out.println("\tSequence: " + orderItems.getSequenceNumber() + " / " + itemQuantity);
+						System.out.println("\tSequence: " + 
+								orderItems.getSequenceNumber() + 
+								" / " + itemQuantity);
 						System.out.println("\t--------------------------------"
 								+ "------------------\n");
 					}

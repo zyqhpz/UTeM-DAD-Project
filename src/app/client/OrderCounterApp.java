@@ -23,7 +23,7 @@ import view.OrderCounterView;
 /**
  * This class represents the client (Cashier) app for the system
  * 
- * Function: to start the client-side program for the Cashier
+ * Function: to start the client-side program for the application
  * 
  * @author DaysonTai
  */
@@ -56,13 +56,13 @@ public class OrderCounterApp {
             ObjectInputStream ois = new ObjectInputStream(is);
 
             try {
+            	// Read object from the server
                 Object obj = ois.readObject();
-                // Check it's an ArrayList
+
+                // Add the object into itemProduct list
                 if (obj instanceof ArrayList<?>) {
-                    // Get the List.
                     ArrayList<?> al = (ArrayList<?>) obj;
                     if (al.size() > 0) {
-                        // Iterate.
                         for (int i = 0; i < al.size(); i++) {
                             Object o = al.get(i);
                             if (o instanceof ItemProduct) {
@@ -80,7 +80,8 @@ public class OrderCounterApp {
                 System.out.println("\n\t ItemProducts fetched from server \n");
 
             } catch (Exception e) {
-                System.out.println("\n\t Error fetching ItemProducts from server \n");
+                System.out.println
+                	("\n\t Error fetching ItemProducts from server \n");
                 e.printStackTrace();
             }
 
@@ -181,13 +182,15 @@ public class OrderCounterApp {
                             socket = new Socket(serverAddress, serverPortNo);
 
                             OutputStream outStream = socket.getOutputStream();
-                            ObjectOutputStream oos = new ObjectOutputStream(outStream);
+                            ObjectOutputStream oos = 
+                            		new ObjectOutputStream(outStream);
                             oos.writeObject(order);
                             oos.flush();
 
                             // 7. Receive Order object from server
                             InputStream inStream = socket.getInputStream();
-                            ObjectInputStream oiStream = new ObjectInputStream(inStream);
+                            ObjectInputStream oiStream = 
+                            		new ObjectInputStream(inStream);
 
                             order = (Order) oiStream.readObject();
                             socket.close();
@@ -206,8 +209,8 @@ public class OrderCounterApp {
 
                 } while (choice != 0);
 
-                // 5. Process Order when customer do payment (initialize all variables using
-                // setters)
+                // 5. Process Order when customer do payment 
+                // (initialize all variables using setters)
 
                 // 7. Print receipt
                 // orderCounterView.displayReceipt(order);
@@ -225,6 +228,12 @@ public class OrderCounterApp {
 
     }
 
+    /**
+     * This method calculate grand total of the order
+     * 
+     * @param order
+     * @return
+     */
     public static Order calculateConfirmationOrder(Order order) {
 
         double subTotal = order.getSubTotal();

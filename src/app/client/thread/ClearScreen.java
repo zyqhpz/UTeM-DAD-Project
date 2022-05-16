@@ -1,23 +1,35 @@
 package app.client.thread;
 
+/**
+ * 
+ * This class is used to remove all printed message in the console when needed.
+ * It is to ensure the tidiness of the system.
+ *
+ */
+
 public class ClearScreen {
-    public static void main(String[] args) {
-        System.out.println("Hello World");
-        ClearConsole();
-    }
 
     public static void ClearConsole() {
+    	
         try {
-            String operatingSystem = System.getProperty("os.name"); // Check the current operating system
-            System.out.println("Operating System: " + operatingSystem);
+        	
+        	// Check the current operating system
+            String operatingSystem = System.getProperty("os.name"); 
+            
             if (operatingSystem.contains("Windows")) {
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            	
+                new ProcessBuilder("cmd", "/c", "cls").
+                	inheritIO().start().waitFor();
+                
             } else {
+            	
                 ProcessBuilder pb = new ProcessBuilder("clear");
                 Process startProcess = pb.inheritIO().start();
                 startProcess.waitFor();
             }
+            
         } catch (Exception e) {
+        	
             System.out.println(e);
         }
     }

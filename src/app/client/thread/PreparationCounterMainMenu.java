@@ -12,6 +12,14 @@ import java.util.Scanner;
 import model.Order;
 import view.PreparationCounterView;
 
+
+/**
+ * This is the class definition of the PreparationCounterGetter thread.
+ * 
+ * @author WongKakLok
+ *
+ */
+
 public class PreparationCounterMainMenu implements Runnable {
 
     private Socket socket = null;
@@ -25,11 +33,14 @@ public class PreparationCounterMainMenu implements Runnable {
 
     @Override
     public void run() {
-        PreparationCounterView preparationCounterView = new PreparationCounterView();
+        PreparationCounterView preparationCounterView = 
+        		new PreparationCounterView();
 
         Scanner sc = new Scanner(System.in);
+        
         int optionToViewPending;
         int optionToUpdateStatus = -1;
+
         Date date = new Date();
         System.out.println("\n\t" + date.toString() + "\n");
 
@@ -40,8 +51,7 @@ public class PreparationCounterMainMenu implements Runnable {
 
             do {
 
-                // 1. Display main menu
-                // 2. Select to view pending orders
+                // Display main menu by invoking class form the view 
                 optionToViewPending = preparationCounterView.mainScreen();
 
                 if (optionToViewPending == 1) {
@@ -54,7 +64,7 @@ public class PreparationCounterMainMenu implements Runnable {
 
                         preparationCounterView.displayOrders(orders);
 
-                        // 3. Select Order Number to view order details
+                        // Select Order Number to view order details
                         System.out.println("\n\tEnter Order Number or "
                                 + "0 to return to main menu: ");
                         System.out.print("\t>> ");
@@ -65,30 +75,29 @@ public class PreparationCounterMainMenu implements Runnable {
                         else {
                             // Print stickers
                             ClearScreen.ClearConsole();
-                            Order updatedOrder = preparationCounterView.printSticker(optionToViewDetails);
+                            Order updatedOrder = preparationCounterView.
+                            		printSticker(optionToViewDetails);
 
                             if (updatedOrder == null)
                                 continue;
 
-                            // 4. Select to update order status
                             System.out.println("\tEnter 1 to update order status"
-                                    + " or 0 to go back to previous menu: ");
+                            		+ " or 0 to go back to previous menu: ");
                             System.out.print("\t>> ");
                             optionToUpdateStatus = sc.nextInt();
 
                             if (optionToUpdateStatus == 1) {
 
-                                // 5. Set order item status to "Ready"
-                                // 6. Send Order object to server
-
-                                // remove updated order from list
+                                // Remove updated order from list
                                 orders.remove(updatedOrder);
 
                                 socket = new Socket(serverAddress, 8089);
 
-                                // 6. Send Order object to server
-                                OutputStream outStream = socket.getOutputStream();
-                                ObjectOutputStream oos = new ObjectOutputStream(outStream);
+                                // Send Order object to server
+                                OutputStream outStream = 
+                                		socket.getOutputStream();
+                                ObjectOutputStream oos = 
+                                		new ObjectOutputStream(outStream);
                                 oos.writeObject(updatedOrder);
                                 System.out.println("Order updated");
 
@@ -98,7 +107,7 @@ public class PreparationCounterMainMenu implements Runnable {
                                 outStream.close();
                                 oos.close();
 
-                                // 7. Redirect to main menu
+                                // Redirect to main menu
                                 ClearScreen.ClearConsole();
                                 break;
 

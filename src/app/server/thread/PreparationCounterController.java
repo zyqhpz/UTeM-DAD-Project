@@ -8,12 +8,20 @@ import java.net.Socket;
 import controller.OrderItemManager;
 import model.*;
 
+/**
+ * This class is the controller class of server towards Preparation Counter.
+ * 
+ * @author haziqhapiz
+ *
+ */
+
 public class PreparationCounterController implements Runnable {
     private Socket baristaSocket = null;
     private Order order;
     private ServerSocket baristaGetterSocket = null;
 
-    public PreparationCounterController(Socket baristaSocket, ServerSocket baristaGetterSocket) {
+    public PreparationCounterController
+    (Socket baristaSocket, ServerSocket baristaGetterSocket) {
         this.baristaSocket = baristaSocket;
         this.baristaGetterSocket = baristaGetterSocket;
     }
@@ -37,9 +45,8 @@ public class PreparationCounterController implements Runnable {
                     OrderItemManager orderItemManager = new OrderItemManager();
                     orderItemManager.updateOrderStatus(order);
 
-                    System.out.println("\n\tOrder Number: " + orderNumber + ". Order status updated.\n");
-
-                    LogRecorder.recordLog("Order Number: " + orderNumber + " status updated to Ready");
+                    LogRecorder.recordLog("Order Number: " + orderNumber +
+                    		" status updated to Ready");
 
                 } catch (Exception e) {
                     e.printStackTrace();
