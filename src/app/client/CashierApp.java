@@ -35,7 +35,6 @@ public class CashierApp {
         String continueOrder = "Yes";
         Scanner sc = new Scanner(System.in);
         
-//        List<OrderItem> orderItems = new ArrayList<OrderItem>();
         
         // This array contains Objects of the item product
         ItemProduct[] menuList = new ItemProduct[30];
@@ -138,6 +137,7 @@ public class CashierApp {
             	List<OrderItem> orderItems = new ArrayList<OrderItem>();
 //            	Order order = new Order();
             	Order order = null;
+            	OrderItem orderItem = new OrderItem();
             	int totalOrderItem = 0;
             	double subTotal = 0;
             	
@@ -156,11 +156,6 @@ public class CashierApp {
                 	System.out.println("\n\t Enter 0 to complete this order");
                 	System.out.print("\n\t Choice: ");
                 	choice = sc.nextInt();
-                	
-                	
-                	
-                	
-                	
                 	
                 		
                 	// continue to add beverage 
@@ -185,7 +180,8 @@ public class CashierApp {
                     		
                     	
                     	// 3. Store in ArrayList
-                    	OrderItem orderItem = new OrderItem();
+                    	orderItem = null;
+                    	orderItem = new OrderItem();
                     	orderItem.setItemProduct(menuList[choice-1]);
                     	orderItem.setOrderItemId(orderNumber);
                     	orderItem.setOrderStatus("Not Ready");
@@ -202,18 +198,12 @@ public class CashierApp {
                 	
                 	// Customer order finish
                     // 4. Add to Order object
-                	// which contains List<OrderItem> orderItems;
+                	// which contains List<OrderItem> order Items;
                 	Calendar calendar = Calendar.getInstance();
                     calendar.set(2022, 5, 7, 20, 1, 1);
                 	
                 	int orderId = 1000 + orderNumber;
                 	Date transactionDate = calendar.getTime();
-//                	List<OrderItem> orderItems;
-//                	double serviceTax = 0.05;
-//                	double rounding = 0;
-//                	double grandTotal = 10.05;
-//                	double tenderedCash = 20;
-//                	double change = 9.95;
                 	
                 	double serviceTax = subTotal * 0.06;
                 	double rounding = 0;
@@ -241,6 +231,8 @@ public class CashierApp {
                 		
                 		int payChoice = sc.nextInt();
                 		
+                		
+                		
                 		// Confirm to pay
                 		if(payChoice == 1) {
                 			System.out.print("\n\tTendered cash: ");
@@ -251,17 +243,16 @@ public class CashierApp {
                 			
                 			
                 			view.displayReceipt(order);
+                			sc.nextLine();
                 		}
                 		
-                		// Go back to menu
-                		else if (payChoice == 2) {
-                			view.displayOrderList(menuList);
-                		}
+                		
+
                 	}
                 		
                 		
                 	
-                	sc.nextLine();
+                	
                 	
               
                 	
