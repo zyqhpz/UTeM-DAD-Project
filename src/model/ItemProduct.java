@@ -2,16 +2,24 @@ package model;
 
 import java.io.Serializable;
 
-/**
- * This is the model class for ItemProduct.
- *
- */
 public class ItemProduct implements Serializable {
 
     private int itemProductId;
     private String name;
     private String labelName;
     private double price;
+    
+    public ItemProduct() {
+    	
+    }
+    
+    public ItemProduct(int itemProductId, String name, String labelName, 
+    		double price) {
+    	this.itemProductId = itemProductId;
+    	this.name = name;
+    	this.labelName = labelName;
+    	this.price = price;
+    }
 
     public int getItemProductId() {
         return itemProductId;

@@ -3,11 +3,6 @@ package model;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * This is the model class for OrderItem.
- *
- */
-
 public class OrderItem implements Serializable {
 	private int orderItemId;
 	private ItemProduct itemProduct;
