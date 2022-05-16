@@ -1,5 +1,6 @@
 package app.client;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -56,7 +57,7 @@ public class OrderCounterApp {
             ObjectInputStream ois = new ObjectInputStream(is);
 
             try {
-            	// Read object from the server
+                // Read object from the server
                 Object obj = ois.readObject();
 
                 // Add the object into itemProduct list
@@ -80,8 +81,7 @@ public class OrderCounterApp {
                 System.out.println("\n\t ItemProducts fetched from server \n");
 
             } catch (Exception e) {
-                System.out.println
-                	("\n\t Error fetching ItemProducts from server \n");
+                System.out.println("\n\t Error fetching ItemProducts from server \n");
                 e.printStackTrace();
             }
 
@@ -156,11 +156,6 @@ public class OrderCounterApp {
 
                     order = calculateConfirmationOrder(order);
 
-                    // // set Order
-                    // order = setOrder(orderId, orderNumber, transactionDate,
-                    // orderItems, totalOrderItem, subTotal, serviceTax,
-                    // rounding, grandTotal, change);
-
                     // display the confirmation page
                     if (choice == 0) {
                         // clear screen
@@ -182,15 +177,13 @@ public class OrderCounterApp {
                             socket = new Socket(serverAddress, serverPortNo);
 
                             OutputStream outStream = socket.getOutputStream();
-                            ObjectOutputStream oos = 
-                            		new ObjectOutputStream(outStream);
+                            ObjectOutputStream oos = new ObjectOutputStream(outStream);
                             oos.writeObject(order);
                             oos.flush();
 
                             // 7. Receive Order object from server
                             InputStream inStream = socket.getInputStream();
-                            ObjectInputStream oiStream = 
-                            		new ObjectInputStream(inStream);
+                            ObjectInputStream oiStream = new ObjectInputStream(inStream);
 
                             order = (Order) oiStream.readObject();
                             socket.close();
@@ -209,7 +202,7 @@ public class OrderCounterApp {
 
                 } while (choice != 0);
 
-                // 5. Process Order when customer do payment 
+                // 5. Process Order when customer do payment
                 // (initialize all variables using setters)
 
                 // 7. Print receipt
@@ -252,7 +245,7 @@ public class OrderCounterApp {
         return order;
     }
 
-    // print receipt in text file and display on console screen
+    // print receipt in text file
     public static void generateReceiptInTextFile(Order order) {
 
         try {
@@ -260,12 +253,16 @@ public class OrderCounterApp {
             Date date = order.getTransactionDate();
             String transactionDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(date);
 
+            File file = new File("receipts");
+
+            if (!file.exists()) {
+                file.mkdir();
+            }
+
             // get epoch time of order date
             long epochTime = order.getTransactionDate().getTime();
 
             FileWriter myWriter = new FileWriter("receipts/" + epochTime + "-" + order.getOrderNumber() + ".txt");
-            // myWriter.write("Files in Java might be tricky, but it is fun enough!");
-            // myWriter.close();
 
             myWriter.write("-----------------------------------------");
             myWriter.write("\n");

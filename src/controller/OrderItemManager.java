@@ -11,7 +11,8 @@ import model.OrderItem;
 
 /**
  * This is a controller class for OrderItem.
- *
+ * 
+ * @author HaziqHapiz
  */
 
 public class OrderItemManager {
@@ -20,14 +21,14 @@ public class OrderItemManager {
 	private OrderItem orderItem;
 
 	/**
-	 * This method update the orderStatus and readyTime of the order 
+	 * This method update the orderStatus and readyTime of the order
 	 * in database.
 	 * 
 	 * @param order
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	public void updateOrderStatus(Order order) 
+	public void updateOrderStatus(Order order)
 			throws ClassNotFoundException, SQLException {
 
 		// Update query OrderStatus = 'Ready' and ReadyTime = current time
@@ -55,7 +56,7 @@ public class OrderItemManager {
 		conn.close();
 	}
 
-	public void insertDataOrderItem(Order order) 
+	public void insertDataOrderItem(Order order)
 			throws ClassNotFoundException, SQLException {
 		List<OrderItem> orderItems = order.getOrderItems();
 
@@ -99,9 +100,9 @@ public class OrderItemManager {
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
-	public List<OrderItem> loadOrderItem(int orderId) 
+	public List<OrderItem> loadOrderItem(int orderId)
 			throws ClassNotFoundException, SQLException {
-		
+
 		List<OrderItem> orderItems = new ArrayList<OrderItem>();
 
 		String sql = "SELECT * FROM orderitem WHERE `Order` = ?";
@@ -120,8 +121,7 @@ public class OrderItemManager {
 				orderItem.setOrderItemId(resultSet.getInt("OrderItem"));
 				int itemProductId = resultSet.getInt("ItemProduct");
 				itemProductManager.getItemProduct(itemProductId);
-				orderItem.setItemProduct(itemProductManager.
-						getItemProduct(itemProductId));
+				orderItem.setItemProduct(itemProductManager.getItemProduct(itemProductId));
 				orderItem.setQuantity(resultSet.getInt("Quantity"));
 				orderItem.setOrderStatus(resultSet.getString("OrderStatus"));
 

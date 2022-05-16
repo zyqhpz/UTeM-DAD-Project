@@ -11,7 +11,7 @@ import model.*;
 /**
  * This class is the controller class of server towards Preparation Counter.
  * 
- * @author haziqhapiz
+ * @author HaziqHapiz
  *
  */
 
@@ -30,8 +30,10 @@ public class PreparationCounterController implements Runnable {
         try {
             while (baristaSocket.isConnected()) {
 
+                // Accept request from Preparation Counter
                 baristaSocket = baristaGetterSocket.accept();
 
+                // Read object from the Preparation Counter
                 InputStream baristaIS = baristaSocket.getInputStream();
                 ObjectInputStream baristaOIS = new ObjectInputStream(baristaIS);
 

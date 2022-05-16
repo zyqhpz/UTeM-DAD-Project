@@ -13,6 +13,8 @@ import controller.database.Database;
 
 /**
  * This is the controller class for Order.
+ * 
+ * @author HaziqHapiz
  *
  */
 public class OrderManager {
@@ -32,29 +34,28 @@ public class OrderManager {
      */
     public List<Order> loadData() throws ClassNotFoundException, SQLException {
 
-    	conn = Database.doConnection();
+        conn = Database.doConnection();
 
         String sql = "SELECT * FROM `order` JOIN orderitem ON "
-        		+ "orderitem.Order = `order`.OrderId "
-        		+ "WHERE orderitem.OrderStatus = 'Processing' "
-        		+ "GROUP BY `order`.OrderId";
+                + "orderitem.Order = `order`.OrderId "
+                + "WHERE orderitem.OrderStatus = 'Processing' "
+                + "GROUP BY `order`.OrderId";
 
         PreparedStatement pstmt = conn.prepareStatement(sql);
 
         List<Order> orders = new ArrayList<Order>();
 
         ResultSet rs = pstmt.executeQuery();
-        
+
         // if rs is not null, then there are some orders in the database
         while (rs != null && rs.next()) {
-        	
+
             Order order = new Order();
             order.setOrderId(rs.getInt("OrderId"));
-            
+
             OrderItemManager orderItemManager = new OrderItemManager();
-            List<OrderItem> orderItems = 
-            		orderItemManager.loadOrderItem(order.getOrderId());
-            
+            List<OrderItem> orderItems = orderItemManager.loadOrderItem(order.getOrderId());
+
             order.setOrderItems(orderItems);
             order.setOrderNumber(rs.getInt("OrderNumber"));
             // get date from database
@@ -78,14 +79,14 @@ public class OrderManager {
     }
 
     /**
-     * This method add new order into database. 
+     * This method add new order into database.
      * 
      * @param order
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public void insertDataOrder(Order order) 
-    		throws SQLException, ClassNotFoundException {
+    public void insertDataOrder(Order order)
+            throws SQLException, ClassNotFoundException {
 
         conn = Database.doConnection();
 
@@ -102,11 +103,10 @@ public class OrderManager {
         double change;
 
         String sql = "INSERT INTO `order` (OrderNumber, TotalOrderItem, "
-        		+ "SubTotal, ServiceTax, Rounding, GrandTotal, TenderedCash, "
-        		+ "`Change`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                + "SubTotal, ServiceTax, Rounding, GrandTotal, TenderedCash, "
+                + "`Change`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
-        PreparedStatement pstmt = conn.prepareStatement
-        		(sql, PreparedStatement.RETURN_GENERATED_KEYS);
+        PreparedStatement pstmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 
         // set the values
         orderNumber = order.getOrderNumber();
@@ -147,46 +147,11 @@ public class OrderManager {
         orderItemManager.insertDataOrderItem(order);
     }
 
-    /*
-    
-     //* update order status of each order items
-     //* 
-     //* @param order - Order object
-     
-
-    public void updateOrderStatus(Order order) throws ClassNotFoundException, SQLException {
-        List<OrderItem> orderItems = order.getOrderItems();
-
-        conn = Database.doConnection();
-
-        for (OrderItem orderItem : orderItems) {
-            int orderItemId = orderItem.getOrderItemId();
-            String orderStatus = orderItem.getOrderStatus();
-            Date readyTime = orderItem.getReadyTime();
-
-            String sql = "UPDATE orderItem SET orderStatus = ?, readyTime = ? WHERE orderItemId = ?";
-
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-
-            pstmt.setString(1, orderStatus);
-            pstmt.setDate(2, new java.sql.Date(readyTime.getTime()));
-            pstmt.setInt(3, orderItemId);
-
-            // execute the statement
-            pstmt.executeUpdate();
-
-            // close the connection
-            pstmt.close();
-        }
-        conn.close();
-    }
-    */
-
     /**
      * This method calculate the change of payment made by customer.
      * 
      * @param order
-     * @return
+     * @return order
      */
     public Order calculateChange(Order order) {
         double change = order.getTenderedCash() - order.getGrandTotal();

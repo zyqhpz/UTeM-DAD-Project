@@ -13,11 +13,12 @@ import model.ItemProduct;
 
 /**
  * This is a controller class for ItemProduct.
- *
+ * 
+ * @author HaziqHapiz
  */
 
 public class ItemProductManager {
-	
+
     public ItemProductManager() {
     }
 
@@ -29,17 +30,17 @@ public class ItemProductManager {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public ItemProduct getItemProduct(int itemProductId) 
-    		throws ClassNotFoundException, SQLException {
-    	
+    public ItemProduct getItemProduct(int itemProductId)
+            throws ClassNotFoundException, SQLException {
+
         ItemProduct itemProduct = new ItemProduct();
 
         String sql = "SELECT * FROM itemproduct WHERE ItemProductId = ?";
-        
+
         Connection conn = Database.doConnection();
 
         try {
-        	
+
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setInt(1, itemProductId);
             ResultSet rs = preparedStatement.executeQuery();
@@ -50,7 +51,7 @@ public class ItemProductManager {
                 itemProduct.setLabelName(rs.getString("LabelName"));
                 itemProduct.setPrice(rs.getDouble("Price"));
             }
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -68,9 +69,9 @@ public class ItemProductManager {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public List<ItemProduct> loadItemProducts() 
-    		throws ClassNotFoundException, SQLException {
-    	
+    public List<ItemProduct> loadItemProducts()
+            throws ClassNotFoundException, SQLException {
+
         List<ItemProduct> itemProducts = new ArrayList<ItemProduct>();
 
         System.out.println("\n\nLoading ItemProducts..\n");

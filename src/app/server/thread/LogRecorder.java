@@ -12,6 +12,14 @@ import java.io.FileWriter;
 
 public class LogRecorder {
 
+    /*
+     * This method is to record the log of the server to a file.
+     * 
+     * @author HaziqHapiz
+     * 
+     * @param log
+     * 
+     */
     public static void recordLog(String log) {
         try {
 
@@ -30,7 +38,6 @@ public class LogRecorder {
             myWriter.close();
 
         } catch (Exception e) {
-            System.out.println("An error occurred.");
             e.printStackTrace();
         }
     }
