@@ -1,5 +1,6 @@
 package app.client;
 
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -7,6 +8,7 @@ import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Calendar;
@@ -190,6 +192,7 @@ public class OrderCounterApp {
                             order = (Order) oiStream.readObject();
                             socket.close();
 
+                            generateReceiptInTextFile(order);
                             orderCounterView.displayReceipt(order);
                         }
 
@@ -238,5 +241,110 @@ public class OrderCounterApp {
         order.setGrandTotal(grandTotal);
 
         return order;
+    }
+
+    // print receipt in text file and display on console screen
+    public static void generateReceiptInTextFile(Order order) {
+
+        try {
+
+            Date date = order.getTransactionDate();
+            String transactionDate = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(date);
+
+            // get epoch time of order date
+            long epochTime = order.getTransactionDate().getTime();
+
+            FileWriter myWriter = new FileWriter("receipts/" + epochTime + "-" + order.getOrderNumber() + ".txt");
+            // myWriter.write("Files in Java might be tricky, but it is fun enough!");
+            // myWriter.close();
+
+            myWriter.write("-----------------------------------------");
+            myWriter.write("\n");
+            myWriter.write("Your order number is: " + order.getOrderNumber());
+            myWriter.write("\n");
+            myWriter.write("-----------------------------------------");
+            myWriter.write("\n");
+            myWriter.write("HornetTea");
+            myWriter.write("\n");
+            myWriter.write("FICTS");
+            myWriter.write("\n");
+            myWriter.write("Fakulti Teknologi Maklumat dan Komunikasi");
+            myWriter.write("\n");
+            myWriter.write("Universiti Teknikal Malaysia Melaka");
+            myWriter.write("\n");
+            myWriter.write("Hang Tuah Jaya, 76100 Durian Tunggal");
+            myWriter.write("\n");
+            myWriter.write("Melaka, Malaysia");
+            myWriter.write("\n");
+            myWriter.write("-----------------------------------------");
+            myWriter.write("\n");
+            myWriter.write("Invoice");
+            myWriter.write("\n\n");
+            myWriter.write("Bill No: " + epochTime);
+            myWriter.write("\n");
+            myWriter.write("Date: " + transactionDate + "\n");
+            myWriter.write("\n");
+            myWriter.write("Details");
+            myWriter.write("\n");
+            myWriter.write("-----------------------------------------");
+            myWriter.write("\n");
+            myWriter.write(String.format("%-22s %5s %7s", "Item Name", "Qty", "Price(RM)"));
+            myWriter.write("\n");
+            myWriter.write("-----------------------------------------");
+            myWriter.write("\n");
+
+            for (int i = 0; i < order.getOrderItems().size(); i++) {
+                String labelName = order.getOrderItems().get(i).getItemProduct()
+                        .getLabelName();
+                int quantity = order.getOrderItems().get(i).getQuantity();
+                double price = order.getOrderItems().get(i).getItemProduct()
+                        .getPrice();
+
+                String itemTotalPrice = String.format("%.2f", quantity * price);
+                myWriter.write(String.format("%-22s %5s %7s", labelName, quantity,
+                        itemTotalPrice));
+                myWriter.write("\n");
+            }
+
+            myWriter.write("-----------------------------------------");
+            myWriter.write("\n");
+
+            int totalItem = order.getTotalOrderItem();
+            double subTotal = order.getSubTotal();
+            double serviceTax = order.getServiceTax();
+            double grandTotal = order.getGrandTotal();
+            double rounding = order.getRounding();
+            double tenderedCash = order.getTenderedCash();
+            double change = order.getChange();
+
+            myWriter.write(String.format("%-25s %-7s", "Total Item",
+                    totalItem));
+            myWriter.write("\n");
+            myWriter.write(String.format("%35s %.2f", "Sub total", subTotal));
+            myWriter.write("\n");
+            myWriter.write(String.format("%35s %.2f", "Service Tax (6%)",
+                    serviceTax));
+            myWriter.write("\n");
+            myWriter.write(String.format("%35s %.2f", "Rounding", rounding));
+            myWriter.write("\n");
+            myWriter.write("-----------------------------------------");
+
+            myWriter.write("\n");
+            myWriter.write(String.format("%35s %.2f", "Grand Total",
+                    grandTotal));
+            myWriter.write("\n");
+            myWriter.write(String.format("%35s %.2f", "Tendered Cash",
+                    tenderedCash));
+            myWriter.write("\n");
+            myWriter.write(String.format("%35s %.2f", "Change", change));
+            myWriter.write("\n");
+            myWriter.write("-----------------------------------------\n");
+            myWriter.write("\n");
+            myWriter.write("\tThank you and have a good day");
+            myWriter.close();
+        } catch (Exception e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 }

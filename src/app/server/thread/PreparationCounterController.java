@@ -39,6 +39,8 @@ public class PreparationCounterController implements Runnable {
 
                     System.out.println("\n\tOrder Number: " + orderNumber + ". Order status updated.\n");
 
+                    LogRecorder.recordLog("Order Number: " + orderNumber + " status updated to Ready");
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

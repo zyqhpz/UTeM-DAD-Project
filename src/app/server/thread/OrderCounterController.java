@@ -41,6 +41,9 @@ public class OrderCounterController implements Runnable {
 
                 System.out.println("\n\tReceive new order from Order Counter\n");
 
+                LogRecorder.recordLog("Order Number: " + order.getOrderNumber()
+                        + " received from Order Counter");
+
                 // do calculation in order
                 order = orderManager.calculateChange(order);
 
@@ -52,7 +55,10 @@ public class OrderCounterController implements Runnable {
                 System.out.println("\n\tNew order has been calculated. Return the order to Order Counter\n");
 
                 orderManager.insertDataOrder(order);
-                System.out.println("\n\tNew order has been inserted to database\n");
+                System.out.println("\n\tNew order has been inserted into database\n");
+
+                LogRecorder.recordLog("Order Number: " + order.getOrderNumber()
+                        + " inserted into database");
 
                 orders = new ArrayList<Order>();
                 orders = orderManager.loadData();
