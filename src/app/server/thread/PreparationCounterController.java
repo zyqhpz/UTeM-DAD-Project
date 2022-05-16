@@ -20,8 +20,7 @@ public class PreparationCounterController implements Runnable {
     private Order order;
     private ServerSocket baristaGetterSocket = null;
 
-    public PreparationCounterController
-    (Socket baristaSocket, ServerSocket baristaGetterSocket) {
+    public PreparationCounterController(Socket baristaSocket, ServerSocket baristaGetterSocket) {
         this.baristaSocket = baristaSocket;
         this.baristaGetterSocket = baristaGetterSocket;
     }
@@ -45,8 +44,10 @@ public class PreparationCounterController implements Runnable {
                     OrderItemManager orderItemManager = new OrderItemManager();
                     orderItemManager.updateOrderStatus(order);
 
+                    System.out.println("\n\tOrder Number: " + orderNumber + " status updated to Ready\n");
+
                     LogRecorder.recordLog("Order Number: " + orderNumber +
-                    		" status updated to Ready");
+                            " status updated to Ready");
 
                 } catch (Exception e) {
                     e.printStackTrace();
