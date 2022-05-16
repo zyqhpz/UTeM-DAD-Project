@@ -12,7 +12,6 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
@@ -103,7 +102,7 @@ public class OrderCounterApp {
 
                     orderCounterView.displayItemProducts(itemProducts);
 
-                    // 2. Select menu and quantity
+                    // Select menu and quantity
                     System.out.println("\n\t Enter 0 to complete this order");
                     System.out.print("\n\t Choice: ");
                     choice = sc.nextInt();
@@ -130,7 +129,7 @@ public class OrderCounterApp {
                         subTotalAmount = quantity * itemPrice;
                         subTotal += subTotalAmount;
 
-                        // 3. Store in ArrayList
+                        // Store in ArrayList
                         OrderItem orderItem = new OrderItem();
                         orderItem.setItemProduct(itemProduct);
                         orderItem.setOrderItemId(orderNumber);
@@ -138,12 +137,9 @@ public class OrderCounterApp {
                         orderItem.setQuantity(quantity);
                         orderItem.setSubTotalAmount(subTotalAmount);
 
-                        // Add orderItem into order
+                        // Add orderItem into orderItems
                         orderItems.add(orderItem);
                     }
-
-                    // Customer order finish
-                    // 4. Add to Order object
 
                     java.util.Date date = new java.util.Date();
                     Timestamp transactionDate = new Timestamp(date.getTime());
@@ -173,7 +169,7 @@ public class OrderCounterApp {
 
                             order.setTenderedCash(tenderedCash);
 
-                            // 6. Send Order object to server
+                            // Send Order object to server
                             socket = new Socket(serverAddress, serverPortNo);
 
                             OutputStream outStream = socket.getOutputStream();
@@ -181,7 +177,7 @@ public class OrderCounterApp {
                             oos.writeObject(order);
                             oos.flush();
 
-                            // 7. Receive Order object from server
+                            // Receive Order object from server
                             InputStream inStream = socket.getInputStream();
                             ObjectInputStream oiStream = new ObjectInputStream(inStream);
 
@@ -225,7 +221,7 @@ public class OrderCounterApp {
      * This method calculate grand total of the order
      * 
      * @param order
-     * @return
+     * @return Order
      */
     public static Order calculateConfirmationOrder(Order order) {
 
