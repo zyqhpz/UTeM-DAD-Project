@@ -35,7 +35,6 @@ public class CashierApp {
         String continueOrder = "Yes";
         Scanner sc = new Scanner(System.in);
         
-        List<OrderItem> orderItems = new ArrayList<OrderItem>();
         
         // This array contains Objects of the item product
         ItemProduct[] menuList = new ItemProduct[30];
@@ -135,7 +134,10 @@ public class CashierApp {
 
             // Page for making a new order
             do {
-            	Order order = new Order();
+            	List<OrderItem> orderItems = new ArrayList<OrderItem>();
+//            	Order order = new Order();
+            	Order order = null;
+            	OrderItem orderItem = new OrderItem();
             	int totalOrderItem = 0;
             	double subTotal = 0;
             	
@@ -155,20 +157,15 @@ public class CashierApp {
                 	System.out.print("\n\t Choice: ");
                 	choice = sc.nextInt();
                 	
-                	
-                	
-                	
-                	
-                	
                 		
                 	// continue to add beverage 
                 	if(choice != 0) {
                 		
                 		System.out.print("\t Quantity: ");
                     	int quantity = sc.nextInt();
-                    	totalOrderItem = totalOrderItem + quantity;
+                    	totalOrderItem += quantity;
                     	double itemPrice = priceList[choice-1];
-                    	subTotal = subTotal + quantity*itemPrice;
+                    	subTotal += quantity*itemPrice;
                     
                         
                         // get time
@@ -183,7 +180,8 @@ public class CashierApp {
                     		
                     	
                     	// 3. Store in ArrayList
-                    	OrderItem orderItem = new OrderItem();
+                    	orderItem = null;
+                    	orderItem = new OrderItem();
                     	orderItem.setItemProduct(menuList[choice-1]);
                     	orderItem.setOrderItemId(orderNumber);
                     	orderItem.setOrderStatus("Not Ready");
@@ -200,24 +198,19 @@ public class CashierApp {
                 	
                 	// Customer order finish
                     // 4. Add to Order object
-                	// which contains List<OrderItem> orderItems;
+                	// which contains List<OrderItem> order Items;
                 	Calendar calendar = Calendar.getInstance();
                     calendar.set(2022, 5, 7, 20, 1, 1);
                 	
-                	int orderId = 2000 + orderNumber;
+                	int orderId = 1000 + orderNumber;
                 	Date transactionDate = calendar.getTime();
-//                	List<OrderItem> orderItems;
-//                	double serviceTax = 0.05;
-//                	double rounding = 0;
-//                	double grandTotal = 10.05;
-//                	double tenderedCash = 20;
-//                	double change = 9.95;
                 	
-                	double serviceTax = 0.05;
+                	double serviceTax = subTotal * 0.06;
                 	double rounding = 0;
-                	double grandTotal = 10.05;
+                	
+                	double grandTotal = subTotal + serviceTax;
                 	double tenderedCash = 0;
-                	double change = 9.95;
+                	double change = 0;
                 	
                 	order = new Order(orderId, orderNumber, transactionDate, 
                 			orderItems, totalOrderItem, subTotal, serviceTax, 
@@ -229,32 +222,37 @@ public class CashierApp {
                 		// clear screen
                 		new ProcessBuilder("cmd", "/c", "cls").inheritIO()
                 			.start().waitFor();
+                		
+                		order.setRounding(Math.round(grandTotal*20)/20);
+                		
                 	
                 		// display confirmation page
                 		view.confirmationPage(order);
                 		
                 		int payChoice = sc.nextInt();
                 		
+                		
+                		
                 		// Confirm to pay
                 		if(payChoice == 1) {
                 			System.out.print("\n\tTendered cash: ");
                 			tenderedCash = sc.nextDouble();
+                			order.setTenderedCash(tenderedCash);
                 			
                 			
                 			
                 			
                 			view.displayReceipt(order);
+                			sc.nextLine();
                 		}
                 		
-                		// Go back to menu
-                		else if (payChoice == 2) {
-                			view.displayOrderList(menuList);
-                		}
+                		
+
                 	}
                 		
                 		
                 	
-                	sc.nextLine();
+                	
                 	
               
                 	
@@ -264,8 +262,8 @@ public class CashierApp {
             	
             	
             	
-                // 5. Process Order when customer do payment (initialize all variables using
-                // setters)
+                // 5. Process Order when customer do payment (initialize all 
+                // variables using setters)
 
                 // 6. Send Order object to server
                 Socket socket = new Socket(serverAddress, serverPortNo);
@@ -299,8 +297,6 @@ public class CashierApp {
 //    	
 //    	return order;
 //    }
-    
-    
 	
 }
 
