@@ -97,8 +97,6 @@ public class CashierAppView {
 	
 	public static void displayOrderList(ItemProduct[] menuList) {
 		
-		// product name length = 45
-    		
     	System.out.println("\t\t-----Beverages-----\n");
     	System.out.println("+----+---------------------------------------------"
     			+ "+------------+");
@@ -118,6 +116,7 @@ public class CashierAppView {
     }
 	
 	public static void displayReceipt(Order order) {
+		
 		// clear screen
 		try {
 			new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().
@@ -220,8 +219,6 @@ public class CashierAppView {
 		}
 		
 		
-		
-		
 		System.out.println("-----------------------------------------");
 		int totalItem = order.getTotalOrderItem();
 		double subTotal = order.getSubTotal();
@@ -237,7 +234,7 @@ public class CashierAppView {
 		
 		double tenderedCash = order.getTenderedCash();
 		double change = tenderedCash - grandTotalRounded;
-		
+
 		System.out.println(String.format("%-25s %-7s", "Total Item", 
 				totalItem));
 		System.out.println(String.format("%35s %.2f", "Sub total", subTotal));
